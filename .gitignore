@@ -1,0 +1,26 @@
+# Config files for tools like Air
+.air.toml
+
+# Compiled binary files
+*.exe
+*.dll
+*.so
+*.dylib
+/tmp/
+*.out
+*.test
+*.log
+
+# Build directory
+/tmp/
+
+# IDE or editor settings
+.vscode/
+.idea/
+*.swp
+
+# OS-specific files
+.DS_Store
+
+# Go-specific files
+go.sum
