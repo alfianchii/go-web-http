@@ -7,26 +7,29 @@ import (
 	"web-http/config"
 	"web-http/features/admin"
 	"web-http/features/user"
-	"web-http/middleware"
 
-	"github.com/gorilla/mux"
+	// "web-http/middleware"
+
+	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi/v5/middleware"
 )
 
 func main() {
-	router := mux.NewRouter()
+	router := chi.NewRouter()
+
+	router.Use(middleware.Logger)
 	
-	router.HandleFunc("/", user.HomeHandler).Methods("GET")
-	router.HandleFunc("/about", user.AboutHandler).Methods("GET")
-	router.HandleFunc("/greet/{name}", user.GreetHandler).Methods("GET")
-	router.HandleFunc("/search", user.SearchHandler).Methods("GET")
-	router.HandleFunc("/admin", admin.AdminHandler).Methods("GET")
+	router.Get("/", user.HomeHandler)
+	router.Get("/about", user.AboutHandler)
+	router.Get("/greet/{name}", user.GreetHandler)
+	router.Get("/search", user.SearchHandler)
 
-	adminRouter := router.PathPrefix("/admin").Subrouter()
-	adminRouter.HandleFunc("/dashboard", admin.AdminDashboardHandler).Methods("GET")
-	adminRouter.HandleFunc("/settings", admin.AdminSettingsHandler).Methods("GET")
-	adminRouter.HandleFunc("/books/{title}/page/{page}", admin.AdminBookPageHandler).Methods("GET")
-
-	router.Use(middleware.Logging)
+	router.Route("/admin", func(r chi.Router) {
+		r.Get("/", admin.AdminHandler)
+		r.Get("/dashboard", admin.AdminDashboardHandler)
+		r.Get("/settings", admin.AdminSettingsHandler)
+		r.Get("/books/{title}/page/{page}", admin.AdminBookPageHandler)
+	})
 
 	fmt.Printf("Server is running on http://%s\n", config.Address)
 	log.Fatal(http.ListenAndServe(config.Address, router))

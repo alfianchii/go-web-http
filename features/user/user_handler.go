@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"web-http/utils"
 
-	"github.com/gorilla/mux"
+	"github.com/go-chi/chi/v5"
 )
 
 func HomeHandler(res http.ResponseWriter, req *http.Request) {
@@ -22,8 +22,7 @@ func AboutHandler(res http.ResponseWriter, req *http.Request) {
 func GreetHandler(res http.ResponseWriter, req *http.Request) {
 	utils.ResponseSetup(res, req)
 
-	vars := mux.Vars(req)
-	name := vars["name"]
+	name := chi.URLParam(req, "name")
 	utils.SendResponse(res, "Hello, " + name + "!", http.StatusOK, nil)
 }
 

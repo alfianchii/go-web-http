@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"web-http/utils"
 
-	"github.com/gorilla/mux"
+	"github.com/go-chi/chi/v5"
 )
 
 func AdminHandler(res http.ResponseWriter, req *http.Request) {
@@ -28,6 +28,10 @@ func AdminSettingsHandler(res http.ResponseWriter, req *http.Request) {
 func AdminBookPageHandler(res http.ResponseWriter, req *http.Request) {
 	utils.ResponseSetup(res, req)
 
-	vars := mux.Vars(req)
+	vars := map[string]string{
+		"title": chi.URLParam(req, "title"),
+		"page": chi.URLParam(req, "page"),
+	}
+	
 	utils.SendResponse(res, "Welcome to Admin Book Page!", http.StatusOK, vars)	
 }
