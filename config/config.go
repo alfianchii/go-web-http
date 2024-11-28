@@ -3,7 +3,7 @@ package config
 import "fmt"
 
 const (
-	Port = 8080
+	Port = 3333
 	Host = "localhost"
 )
 

@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"web-http/config"
 	"web-http/features/admin"
+	"web-http/features/officer"
 	"web-http/features/user"
 
 	// "web-http/middleware"
@@ -30,6 +31,8 @@ func main() {
 		r.Get("/settings", admin.AdminSettingsHandler)
 		r.Get("/books/{title}/page/{page}", admin.AdminBookPageHandler)
 	})
+
+	router.Mount("/officer", officer.Router())
 
 	fmt.Printf("Server is running on http://%s\n", config.Address)
 	log.Fatal(http.ListenAndServe(config.Address, router))
