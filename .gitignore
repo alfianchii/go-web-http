@@ -24,3 +24,6 @@
 
 # Go-specific files
 go.sum
+
+# Database config
+/config/database.go
