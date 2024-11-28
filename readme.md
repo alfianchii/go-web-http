@@ -11,7 +11,7 @@
 
 <h2 id="features">🤨 What features are available in go-web-http?</h2>
 
--   Nothing :)
+-   [Chi Framework](https://github.com/go-chi/chi)
 
 <h2 id="routes">👤 Routes</h2>
 
