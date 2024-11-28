@@ -26,4 +26,4 @@
 go.sum
 
 # Database config
-/config/database.go
+# /config/database.go
