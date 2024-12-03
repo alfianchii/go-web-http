@@ -17,17 +17,17 @@
 
 ### 👨‍🏫 Admin
 
--   /admin
--   /admin/dashboard
--   /admin/settings
--   /admin/books/{title}/page/{page}
+-   http://localhost:3333/admin
+-   http://localhost:3333/admin/dashboard
+-   http://localhost:3333/admin/settings
+-   http://localhost:3333/admin/books/{title}/page/{page}
 
 ### 🧗 User
 
--   /
--   /about
--   /greet/{name}
--   /search?q={query}
+-   http://localhost:3333/
+-   http://localhost:3333/about
+-   http://localhost:3333/greet/{name}
+-   http://localhost:3333/search?q={query}
 
 <h2 id="installation">💻 Installation</h2>
 
