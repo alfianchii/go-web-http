@@ -40,6 +40,22 @@
 ```bash
 git clone https://github.com/alfianchii/go-web-http
 cd go-web-http
+```
+
+2. Database configuration through the `./config/app.go` file
+```go
+const (
+	Port = 3333
+	Host = "localhost"
+	DBHost = "127.0.0.1"
+	DBPort = 5432 // This is the default port for PostgreSQL
+	DBUser = "my-username"
+	DBName = "my-database"
+)
+```
+
+3. Launch the app
+```bash
 go mod tidy
 go mod verify
 go run .
