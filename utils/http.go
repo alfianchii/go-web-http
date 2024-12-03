@@ -13,7 +13,6 @@ func SetHeaderJson(w http.ResponseWriter) {
 
 func ResponseSetup(res http.ResponseWriter, req *http.Request) {
 	SetHeaderJson(res)
-	LogRequest(req)
 }
 
 func SendResponse(res http.ResponseWriter, msg string, status int, data interface{}) {
