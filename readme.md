@@ -21,6 +21,7 @@
 -   http://localhost:3333/admin/dashboard
 -   http://localhost:3333/admin/settings
 -   http://localhost:3333/admin/books/{title}/page/{page}
+-   http://localhost:3333/admin/satker
 
 ### 🧗 User
 
