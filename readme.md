@@ -12,6 +12,8 @@
 <h2 id="features">🤨 What features are available in go-web-http?</h2>
 
 -   [Chi Framework](https://github.com/go-chi/chi)
+-   [Go Postgres Driver](https://github.com/lib/pq)
+-   [sqlx](https://github.com/jmoiron/sqlx)
 
 <h2 id="routes">👤 Routes</h2>
 
