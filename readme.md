@@ -35,6 +35,7 @@
 <h2 id="installation">💻 Installation</h2>
 
 <h3 id="develop-yourself">🏃‍♂️ Develop by yourself</h3>
+
 1. Clone repository
 
 ```bash
