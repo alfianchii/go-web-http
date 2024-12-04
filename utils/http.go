@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"net/http"
 	"web-http/dto"
+
+	"github.com/go-chi/chi/v5"
 )
 
 func SetHeaderJson(w http.ResponseWriter) {
@@ -47,4 +49,12 @@ func ResponseWithName(res http.ResponseWriter, req *http.Request, msg string) {
 
 func ResponseWithJson(res http.ResponseWriter, json string) {
 	fmt.Fprint(res, json)
+}
+
+func FileServer(router chi.Router, path string, root http.FileSystem) {
+	if path != "/" && path[len(path)-1] != '/' {
+		router.Get(path, http.RedirectHandler(path + "/", http.StatusMovedPermanently).ServeHTTP)
+		path += "/"
+	}
+	router.Handle(path + "*", http.StripPrefix(path, http.FileServer(root)))
 }

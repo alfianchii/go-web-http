@@ -9,6 +9,7 @@ import (
 	"web-http/features/officer"
 	"web-http/features/satker"
 	"web-http/features/user"
+	"web-http/utils"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
@@ -21,6 +22,8 @@ func main() {
 	router := chi.NewRouter()
 
 	router.Use(middleware.Logger)
+	
+	utils.FileServer(router, "/public", http.Dir("./assets"))
 	
 	router.Get("/", user.HomeHandler)
 	router.Get("/about", user.AboutHandler)
