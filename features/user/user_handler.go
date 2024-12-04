@@ -1,16 +1,40 @@
 package user
 
 import (
+	"html/template"
 	"net/http"
 	"web-http/utils"
 
 	"github.com/go-chi/chi/v5"
 )
 
-func HomeHandler(res http.ResponseWriter, req *http.Request) {
-	utils.ResponseSetup(res, req)
+type PageData struct {
+	Title string
+	Heading string
+	Content string
+}
 
-	utils.ResponseWithName(res, req, "WELCOME to Go web development")
+func HomeHandler(res http.ResponseWriter, req *http.Request) {
+	funcMap := template.FuncMap{
+		"toUpper": utils.ToUpper,
+	}
+	
+	view := template.Must(template.New("base.html").Funcs(funcMap).ParseFiles(
+		"templates/layouts/base.html",
+		"templates/pages/home.html",
+	))
+
+	data := PageData{
+		Title: "Home",
+		Heading: "Welcome to Go web development",
+		Content: "This is a simple web application using Go programming language.",
+	}
+
+	err := view.Execute(res, data)
+	if err != nil {
+		http.Error(res, err.Error(), http.StatusInternalServerError)
+		return
+	}
 }
 
 func AboutHandler(res http.ResponseWriter, req *http.Request) {
