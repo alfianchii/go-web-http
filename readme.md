@@ -20,17 +20,29 @@
 ### 👨‍🏫 Admin
 
 -   http://localhost:3333/admin
+- - GET
 -   http://localhost:3333/admin/dashboard
+- - GET
 -   http://localhost:3333/admin/settings
+- - GET
 -   http://localhost:3333/admin/books/{title}/page/{page}
+- - GET
 -   http://localhost:3333/admin/satker
+- - GET
 
 ### 🧗 User
 
 -   http://localhost:3333/
+- - GET
 -   http://localhost:3333/about
+- - GET
+- - POST
+- - - Param(s): email, subject, content
 -   http://localhost:3333/greet/{name}
+- - GET
 -   http://localhost:3333/search?q={query}
+- - GET
+- - - Param(s): q
 
 <h2 id="installation">💻 Installation</h2>
 
