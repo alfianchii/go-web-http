@@ -14,6 +14,12 @@ type PageData struct {
 	Content string
 }
 
+type ContactDetails struct {
+	Email string `json:"email"`
+	Subject string `json:"subject"`
+	Content string `json:"content"`
+}
+
 func HomeHandler(res http.ResponseWriter, req *http.Request) {
 	funcMap := template.FuncMap{
 		"toUpper": utils.ToUpper,
@@ -41,6 +47,18 @@ func AboutHandler(res http.ResponseWriter, req *http.Request) {
 	utils.ResponseSetup(res, req)
 
 	utils.ResponseWithName(res, req, "You are on About's Go web development")
+}
+
+func AboutEmailHandler(res http.ResponseWriter, req *http.Request) {
+	utils.ResponseSetup(res, req)
+
+	details := ContactDetails{
+		Email: req.FormValue("email"),
+		Subject: req.FormValue("subject"),
+		Content: req.FormValue("content"),
+	}
+
+	utils.SendResponse(res, "Success get all Master Satker", http.StatusOK, details)
 }
 
 func GreetHandler(res http.ResponseWriter, req *http.Request) {

@@ -27,6 +27,7 @@ func main() {
 	
 	router.Get("/", user.HomeHandler)
 	router.Get("/about", user.AboutHandler)
+	router.Post("/about", user.AboutEmailHandler)
 	router.Get("/greet/{name}", user.GreetHandler)
 	router.Get("/search", user.SearchHandler)
 
