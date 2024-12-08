@@ -34,8 +34,15 @@
 
 -   http://localhost:3333/
 - - GET
+-   http://localhost:3333/login
+- - POST
+- - - Param(s): username, password
+-   http://localhost:3333/logout
+- - POST
+- - - Header(s): Cookie
 -   http://localhost:3333/about
 - - GET
+- - - Header(s): Cookie
 - - POST
 - - - Param(s): email, subject, content
 -   http://localhost:3333/greet/{name}
