@@ -9,24 +9,28 @@ import (
 	"web-http/features/officer"
 	"web-http/features/satker"
 	"web-http/features/user"
+	"web-http/middleware"
 	"web-http/utils"
 
 	"github.com/go-chi/chi/v5"
-	"github.com/go-chi/chi/v5/middleware"
+	chiMiddleware "github.com/go-chi/chi/v5/middleware"
 )
 
 func main() {
 	db := config.DBConnect()
 	defer db.Close()
+	utils.Init()
 
 	router := chi.NewRouter()
 
-	router.Use(middleware.Logger)
+	router.Use(chiMiddleware.Logger)
 	
 	utils.FileServer(router, "/public", http.Dir("./assets"))
 	
 	router.Get("/", user.HomeHandler)
-	router.Get("/about", user.AboutHandler)
+	router.Post("/login", user.LoginHandler)
+	router.Post("/logout", user.LogoutHandler)
+	router.With(middleware.AuthMiddleware).Get("/about", user.AboutHandler)
 	router.Post("/about", user.AboutEmailHandler)
 	router.Get("/greet/{name}", user.GreetHandler)
 	router.Get("/search", user.SearchHandler)

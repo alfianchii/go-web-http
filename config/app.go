@@ -15,6 +15,7 @@ const (
 	DBPort = 5432
 	DBUser = "your-username"
 	DBName = "your-database"
+	SessionName = "web-http-app-session"
 )
 
 var Address = fmt.Sprintf("%s:%d", Host, Port)
