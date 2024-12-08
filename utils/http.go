@@ -9,8 +9,8 @@ import (
 	"github.com/go-chi/chi/v5"
 )
 
-func SetHeaderJson(w http.ResponseWriter) {
-	w.Header().Set("Content-Type", "application/json")
+func SetHeaderJson(res http.ResponseWriter) {
+	res.Header().Set("Content-Type", "application/json")
 }
 
 func ResponseSetup(res http.ResponseWriter, req *http.Request) {
@@ -24,9 +24,8 @@ func SendResponse(res http.ResponseWriter, msg string, status int, data interfac
 		Data: data,
 	}
 
-	responseJson := ConvertToJson(response, res)
-	
-	ResponseWithJson(res, string(responseJson))
+	res.WriteHeader(status)
+	json.NewEncoder(res).Encode(response)	
 }
 
 func ConvertToJson(data dto.Response, res http.ResponseWriter) []byte {
