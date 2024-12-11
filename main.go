@@ -9,6 +9,7 @@ import (
 	"web-http/features/officer"
 	"web-http/features/satker"
 	"web-http/features/user"
+	websocket "web-http/features/web-socket"
 	"web-http/middleware"
 	"web-http/utils"
 
@@ -27,6 +28,9 @@ func main() {
 	
 	utils.FileServer(router, "/public", http.Dir("./assets"))
 	
+	router.Get("/ws", websocket.WebsocketHandler)
+	go websocket.BroadcastMessages()
+
 	router.Get("/", user.HomeHandler)
 	router.Post("/login", user.LoginHandler)
 	router.Post("/logout", user.LogoutHandler)
