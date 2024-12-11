@@ -1,4 +1,4 @@
-const socket = new WebSocket("ws://localhost:3333/ws");
+const socket = new WebSocket(`ws://${document.location.host}/ws`);
 const tabId = `Tab-${Math.random().toString(36).substring(7)}`;
 const generateDate = () => new Date().toISOString().replace('T', ' ').split('.')[0];
 const sendData = (data) => socket.send(JSON.stringify(data));
