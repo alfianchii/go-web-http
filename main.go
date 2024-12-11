@@ -27,6 +27,7 @@ func main() {
 	router.Use(chiMiddleware.Logger)
 	
 	utils.FileServer(router, "/public", http.Dir("./assets"))
+	utils.FileServer(router, "/templates", http.Dir("./templates"))
 	
 	router.Get("/ws", websocket.WebsocketHandler)
 	go websocket.BroadcastMessages()

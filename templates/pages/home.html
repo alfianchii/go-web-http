@@ -3,4 +3,12 @@
 {{ define "content" }}
 <h1>{{ toUpper .Heading }}</h1>
 <p>{{ .Content }}</p>
+<input type="text" name="fullname" id="fullname" autofocus>
+<p id="notification">Online</p>
+<div id="messages"></div>
+<button id="submit-message">Send</button>
+{{ end }}
+
+{{ define "script" }}
+<script src="/templates/js/app.js"></script>
 {{ end }}
