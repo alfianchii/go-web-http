@@ -14,6 +14,7 @@
 -   [Chi Framework](https://github.com/go-chi/chi)
 -   [Go Postgres Driver](https://github.com/lib/pq)
 -   [sqlx](https://github.com/jmoiron/sqlx)
+-   [websocket](https://github.com/gorilla/websocket)
 
 <h2 id="routes">👤 Routes</h2>
 
@@ -33,7 +34,7 @@
 ### 🧗 User
 
 -   http://localhost:3333/
-- - GET
+- - GET (Websocket)
 -   http://localhost:3333/login
 - - POST
 - - - Param(s): username, password
