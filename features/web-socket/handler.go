@@ -35,13 +35,13 @@ func WebsocketHandler(w http.ResponseWriter, r *http.Request) {
 		}
 
 		ClientsLock.Lock()
-		Clients[conn] = msg.TabID
+		Clients[conn] = msg.ClientID
 		ClientsLock.Unlock()
 
 		if msg.Typing && msg.Text != "" {
-			Typers[msg.TabID] = true
-		} else if msg.TabID != "" {
-			delete(Typers, msg.TabID)
+			Typers[msg.ClientID] = true
+		} else if msg.ClientID != "" {
+			delete(Typers, msg.ClientID)
 		}
 
 		BroadcastChan <-msg

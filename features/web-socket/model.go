@@ -3,7 +3,7 @@ package websocket
 import "github.com/gorilla/websocket"
 
 type Message struct {
-	TabID  string `json:"tabId"`
+	ClientID  string `json:"clientId"`
 	Text   string `json:"text,omitempty"`
 	Send   bool   `json:"send,omitempty"`
 	Typing bool   `json:"typing,omitempty"`

@@ -1,5 +1,5 @@
 const socket = new WebSocket(`ws://${document.location.host}/ws`);
-const tabId = `Tab-${Math.random().toString(36).substring(7)}`;
+const clientId = `User-${Math.random().toString(36).substring(7)}`;
 const generateDate = () => new Date().toISOString().replace('T', ' ').split('.')[0];
 const sendData = (data) => socket.send(JSON.stringify(data));
 const initDOMElements = () => ({
@@ -15,18 +15,18 @@ const setupSocket = ({ input, button, notification, messages }) => {
 
     button.addEventListener("click", () => {
       if (input.value) {
-        sendData({ tabId, text: `${generateDate()} - ${input.value}`, send: true });
+        sendData({ clientId, text: `${generateDate()} - ${input.value}`, send: true });
         input.focus();
         input.value = "";
       }
     });
 
-    input.addEventListener("input", () => sendData({ tabId, text: input.value, typing: true }));
+    input.addEventListener("input", () => sendData({ clientId, text: input.value, typing: true }));
 
     input.addEventListener("keypress", (event) => {
       if (event.key === "Enter" && input.value) {
-        sendData({ tabId, text: `${generateDate()} - ${input.value}`, send: true });
-        sendData({ tabId, typing: false });
+        sendData({ clientId, text: `${generateDate()} - ${input.value}`, send: true });
+        sendData({ clientId, typing: false });
         input.focus();
         input.value = "";
       }
