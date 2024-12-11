@@ -16,8 +16,7 @@ const setupSocket = ({ input, button, notification, messages }) => {
     button.addEventListener("click", () => {
       if (input.value) {
         sendData({ clientId, text: `${generateDate()} - ${input.value}`, send: true });
-        input.focus();
-        input.value = "";
+        resetInput(input);
       }
     });
 
@@ -27,8 +26,7 @@ const setupSocket = ({ input, button, notification, messages }) => {
       if (event.key === "Enter" && input.value) {
         sendData({ clientId, text: `${generateDate()} - ${input.value}`, send: true });
         sendData({ clientId, typing: false });
-        input.focus();
-        input.value = "";
+        resetInput(input);
       }
     });
   }
@@ -52,6 +50,11 @@ const displayMessage = (text, messages) => {
 
   if (messages.firstChild) messages.insertBefore(messageElement, messages.firstChild);
   else messages.appendChild(messageElement);
+}
+
+const resetInput = (input) => {
+  input.focus();
+  input.value = "";
 }
 
 document.addEventListener("DOMContentLoaded", () => {
