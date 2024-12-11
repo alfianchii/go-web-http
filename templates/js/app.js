@@ -10,6 +10,8 @@ const initDOMElements = () => ({
 });
 
 const setupSocket = ({ input, button, notification, messages }) => {
+  if (!window.WebSocket) return notification.innerText = "WebSocket is not supported by your browser.";
+  
   socket.onopen = () => {
     console.log("WebSocket connection established");
 
