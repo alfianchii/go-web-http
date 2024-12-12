@@ -1,0 +1,9 @@
+CREATE TABLE IF NOT EXISTS mst_satker (
+  satker_id SERIAL PRIMARY KEY,
+  satker VARCHAR(255) NOT NULL,
+  singkatan VARCHAR(255),
+  created_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  created_by VARCHAR(255),
+  updated_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_by VARCHAR(255)
+);

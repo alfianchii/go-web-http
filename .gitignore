@@ -13,6 +13,7 @@
 
 # Build directory
 /tmp/
+/bin/
 
 # IDE or editor settings
 .vscode/
@@ -24,6 +25,3 @@
 
 # Go-specific files
 go.sum
-
-# Database config
-/config/database.go
