@@ -10,7 +10,7 @@ import (
 
 const (
 	Port = 3333
-	Host = "localhost"
+	Host = "0.0.0.0"
 	DBHost = "127.0.0.1"
 	DBPort = 5432
 	DBUser = "your-username"
