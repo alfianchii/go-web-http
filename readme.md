@@ -1,6 +1,6 @@
 <div align="center">
 	<h1>go-web-httpにようこそ！! 👋</h1>
-	<a href="https://github.com/alfianchii/go-web-http/blob/main/readme-en.md" target="_blank">EN Readme!</a>
+	<a href="https://github.com/alfianchii/go-web-http/blob/main/en-readme.md" target="_blank">EN Readme!</a>
 </div>
 
 [![全部Contributors](https://img.shields.io/github/contributors/alfianchii/go-web-http)](https://github.com/alfianchii/go-web-http/graphs/contributors)
