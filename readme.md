@@ -15,6 +15,7 @@
 -   [Go Postgres Driver](https://github.com/lib/pq)
 -   [sqlx](https://github.com/jmoiron/sqlx)
 -   [websocket](https://github.com/gorilla/websocket)
+-   [golang-migrate](https://github.com/gorilla/websocket)
 
 <h2 id="routes">👤 Routes</h2>
 
@@ -75,7 +76,20 @@ const (
 )
 ```
 
-3. Launch the app
+3. Install [golang-migrate](https://github.com/gorilla/websocket) locally and run the migration
+```bash
+GOBIN=$(pwd)/bin go install -tags 'postgres' github.com/golang-migrate/migrate/v4/cmd/migrate@latest
+./bin/migrate -database "postgres://your-username:your-password@127.0.0.1:5432/your_database?sslmode=disable" -path ./migrations up
+# Down the migration
+./bin/migrate -database "postgres://your-username:your-password@127.0.0.1:5432/your_database?sslmode=disable" -path ./migrations down
+```
+
+- Additionally, if you want make your own migrations, you can use the following command:
+```bash
+./bin/migrate create -ext sql -dir migrations -seq create_<table_name>
+```
+
+4. Launch the app
 ```bash
 go mod tidy
 go mod verify
