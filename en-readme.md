@@ -16,6 +16,7 @@
 -   [sqlx](https://github.com/jmoiron/sqlx)
 -   [websocket](https://github.com/gorilla/websocket)
 -   [golang-migrate](https://github.com/gorilla/websocket)
+-   [godotenv](https://github.com/gorilla/websocket)
 
 <h2 id="routes">👤 Routes</h2>
 
@@ -57,42 +58,42 @@
 
 <h3 id="develop-yourself">🏃‍♂️ Develop by yourself</h3>
 
-1. Clone repository
+1. Clone repository and install dependencies
 
 ```bash
 git clone https://github.com/alfianchii/go-web-http
 cd go-web-http
+go mod tidy
+go mod verify
+cp .env.example .env
 ```
 
-2. Database configuration through the `./config/app.go` file
-```go
-const (
-  Port = 3333
-  Host = "localhost"
-  DBHost = "127.0.0.1"
-  DBPort = 5432 // This is the default port for PostgreSQL
-  DBUser = "my-username"
-  DBName = "my-database"
-)
+2. Database configuration through the `.env` file
+```bash
+DB_DATABASE=go_web_http
+DB_USERNAME=your-username
+DB_PASSWORD=your-password
 ```
 
 3. Install [golang-migrate](https://github.com/gorilla/websocket) locally and run the migration
 ```bash
 GOBIN=$(pwd)/bin go install -tags 'postgres' github.com/golang-migrate/migrate/v4/cmd/migrate@latest
-./bin/migrate -database "postgres://your-username:your-password@127.0.0.1:5432/your_database?sslmode=disable" -path ./migrations up
+./bin/migrate -database "postgres://your-username:your-password@127.0.0.1:5432/go_web_http?sslmode=disable" -path ./migrations up
 # Down the migration
-./bin/migrate -database "postgres://your-username:your-password@127.0.0.1:5432/your_database?sslmode=disable" -path ./migrations down
+./bin/migrate -database "postgres://your-username:your-password@127.0.0.1:5432/go_web_http?sslmode=disable" -path ./migrations down
 ```
 
 - Additionally, if you want make your own migrations, you can use the following command:
 ```bash
 ./bin/migrate create -ext sql -dir migrations -seq create_<table_name>
 ```
+- For example:
+```bash
+./bin/migrate create -ext sql -dir migrations -seq create_mst_satker
+```
 
 4. Launch the app
 ```bash
-go mod tidy
-go mod verify
 go run .
 # OR
 air # Run with Air
