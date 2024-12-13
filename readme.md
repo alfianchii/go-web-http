@@ -19,6 +19,7 @@
 -   [sqlx](https://github.com/jmoiron/sqlx)
 -   [websocket](https://github.com/gorilla/websocket)
 -   [golang-migrate](https://github.com/gorilla/websocket)
+-   [godotenv](https://github.com/gorilla/websocket)
 
 <h2 id="routes">👤 ルート</h2>
 
@@ -60,42 +61,41 @@
 
 <h3 id="develop-yourself">🏃‍♂️ 自分で開発してみて</h3>
 
-1. Repositoryをクローンする
-
+1. Repositoryをクローンして、dependenciesをインストールする
 ```bash
 git clone https://github.com/alfianchii/go-web-http
 cd go-web-http
+go mod tidy
+go mod verify
+cp .env.example .env
 ```
 
-2. `./config/app.go`ファイルを通じてDatabaseを設定する
-```go
-const (
-	Port = 3333
-	Host = "localhost"
-	DBHost = "127.0.0.1"
-	DBPort = 5432 // これはPostgreSQLのデフォルトポートです
-	DBUser = "my-username"
-	DBName = "my-database"
-)
+2. `.env`ファイルを通じてDatabaseを設定する
+```bash
+DB_DATABASE=go_web_http
+DB_USERNAME=your-username
+DB_PASSWORD=your-password
 ```
 
 3. ローカルに、[golang-migrate](https://github.com/gorilla/websocket)をインストールして、migrationを実行する
 ```bash
 GOBIN=$(pwd)/bin go install -tags 'postgres' github.com/golang-migrate/migrate/v4/cmd/migrate@latest
-./bin/migrate -database "postgres://your-username:your-password@127.0.0.1:5432/your_database?sslmode=disable" -path ./migrations up
+./bin/migrate -database "postgres://your-username:your-password@127.0.0.1:5432/go_web_http?sslmode=disable" -path ./migrations up
 # Migrationをダウングレードする
-./bin/migrate -database "postgres://your-username:your-password@127.0.0.1:5432/your_database?sslmode=disable" -path ./migrations down
+./bin/migrate -database "postgres://your-username:your-password@127.0.0.1:5432/go_web_http?sslmode=disable" -path ./migrations down
 ```
 
 - さらに、自分でmigrationsを作成したい場合は、次のcommandを使用できます:
 ```bash
 ./bin/migrate create -ext sql -dir migrations -seq create_<table_name>
 ```
+- 例えば：
+```bash
+./bin/migrate create -ext sql -dir migrations -seq create_mst_satker
+```
 
 4. Appを起動する
 ```bash
-go mod tidy
-go mod verify
 go run .
 # OR
 air # Airと実行する
