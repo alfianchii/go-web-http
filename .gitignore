@@ -25,3 +25,5 @@
 
 # Go-specific files
 go.sum
+
+.env

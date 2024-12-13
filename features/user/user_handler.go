@@ -57,7 +57,7 @@ func HomeHandler(res http.ResponseWriter, req *http.Request) {
 
 func LoginHandler(res http.ResponseWriter, req *http.Request) {
 	utils.ResponseSetup(res, req)
-	session, _ := utils.Store.Get(req, config.SessionName)
+	session, _ := utils.Store.Get(req, config.GetENV("COOKIE_NAME"))
 
 	creds := UserLogin{
 		Username: req.FormValue("username"),
@@ -80,7 +80,7 @@ func LoginHandler(res http.ResponseWriter, req *http.Request) {
 
 func LogoutHandler(res http.ResponseWriter, req *http.Request) {
 	utils.ResponseSetup(res, req)
-	session, _ := utils.Store.Get(req, config.SessionName)
+	session, _ := utils.Store.Get(req, config.GetENV("COOKIE_NAME"))
 	session.Values = make(map[interface{}]interface{})
 	session.Options.MaxAge = -1
 	utils.Store.MaxAge(-1)
@@ -91,7 +91,7 @@ func LogoutHandler(res http.ResponseWriter, req *http.Request) {
 
 func AboutHandler(res http.ResponseWriter, req *http.Request) {
 	utils.ResponseSetup(res, req)
-	session, _ := utils.Store.Get(req, config.SessionName)
+	session, _ := utils.Store.Get(req, config.GetENV("COOKIE_NAME"))
 	username := session.Values["username"].(string)
 
 	utils.SendResponse(res, "Welcome to the About page, " + username, http.StatusOK, nil)

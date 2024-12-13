@@ -5,23 +5,14 @@ import (
 	"log"
 
 	"github.com/jmoiron/sqlx"
+	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
 )
 
-const (
-	Port = 3333
-	Host = "0.0.0.0"
-	DBHost = "127.0.0.1"
-	DBPort = 5432
-	DBUser = "your-username"
-	DBName = "your-database"
-	SessionName = "web-http-app-session"
-)
-
-var Address = fmt.Sprintf("%s:%d", Host, Port)
+var Address = fmt.Sprintf("%s:%s", GetENV("APP_URL"), GetENV("APP_PORT"))
 
 func dbConfig () string {
-	return fmt.Sprintf("host=%s port=%d user=%s dbname=%s sslmode=disable", DBHost, DBPort, DBUser, DBName)
+	return fmt.Sprintf("host=%s port=%s user=%s dbname=%s sslmode=disable", GetENV("DB_HOST"), GetENV("DB_PORT"), GetENV("DB_USERNAME"), GetENV("DB_DATABASE"))
 }
 
 func DBConnect() *sqlx.DB {
@@ -37,4 +28,20 @@ func DBConnect() *sqlx.DB {
 
 	fmt.Println("Successfully connected to the PostgreSQL database!")
 	return db
+}
+
+func InitENV() {
+	err := godotenv.Load()
+	if err != nil {
+		fmt.Println("Error loading .env file")
+	}
+}
+
+func GetENV(key string) string {
+	myEnv, err := godotenv.Read()
+	if err != nil {
+		fmt.Println("Error reading .env file")
+	}
+
+	return myEnv[key]
 }

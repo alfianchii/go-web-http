@@ -18,9 +18,10 @@ import (
 )
 
 func main() {
+	config.InitENV()
 	db := config.DBConnect()
 	defer db.Close()
-	utils.Init()
+	utils.InitCookie()
 
 	router := chi.NewRouter()
 
