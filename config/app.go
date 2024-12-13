@@ -16,7 +16,7 @@ func dbConfig () string {
 }
 
 func DBConnect() *sqlx.DB {
-	db, err := sqlx.Open("postgres", dbConfig())
+	db, err := sqlx.Open(GetENV("DB_CONNECTION"), dbConfig())
 	if err != nil {
 		log.Fatalf("Error connecting to the database: %v\n", err)
 	}
