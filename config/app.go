@@ -33,14 +33,14 @@ func DBConnect() *sqlx.DB {
 func InitENV() {
 	err := godotenv.Load()
 	if err != nil {
-		fmt.Println("Error loading .env file")
+		log.Fatalf("Error loading .env file")
 	}
 }
 
 func GetENV(key string) string {
 	myEnv, err := godotenv.Read()
 	if err != nil {
-		fmt.Println("Error reading .env file")
+		log.Fatalf("Error reading .env file")
 	}
 
 	return myEnv[key]
