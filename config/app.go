@@ -11,6 +11,22 @@ import (
 
 var Address = fmt.Sprintf("%s:%s", GetENV("APP_URL"), GetENV("APP_PORT"))
 
+func InitENV() {
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatalf("Error loading .env file")
+	}
+}
+
+func GetENV(key string) string {
+	myEnv, err := godotenv.Read()
+	if err != nil {
+		log.Fatalf("Error reading .env file")
+	}
+
+	return myEnv[key]
+}
+
 func dbConfig () string {
 	return fmt.Sprintf("host=%s port=%s user=%s dbname=%s sslmode=disable", GetENV("DB_HOST"), GetENV("DB_PORT"), GetENV("DB_USERNAME"), GetENV("DB_DATABASE"))
 }
@@ -28,20 +44,4 @@ func DBConnect() *sqlx.DB {
 
 	fmt.Println("Successfully connected to the PostgreSQL database!")
 	return db
-}
-
-func InitENV() {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatalf("Error loading .env file")
-	}
-}
-
-func GetENV(key string) string {
-	myEnv, err := godotenv.Read()
-	if err != nil {
-		log.Fatalf("Error reading .env file")
-	}
-
-	return myEnv[key]
 }
