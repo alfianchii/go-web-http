@@ -72,6 +72,9 @@ cp .env.example .env
 DB_DATABASE=go_web_http
 DB_USERNAME=your-username
 DB_PASSWORD=your-password
+MONGODB_DATABASE=goWebHttp
+MONGODB_USERNAME=your-username
+MONGODB_PASSWORD=your-password
 ```
 
 3. Install [golang-migrate](https://github.com/gorilla/websocket) locally and run the migration

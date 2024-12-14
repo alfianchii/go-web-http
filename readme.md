@@ -75,6 +75,9 @@ cp .env.example .env
 DB_DATABASE=go_web_http
 DB_USERNAME=your-username
 DB_PASSWORD=your-password
+MONGODB_DATABASE=goWebHttp
+MONGODB_USERNAME=your-username
+MONGODB_PASSWORD=your-password
 ```
 
 3. ローカルに、[golang-migrate](https://github.com/gorilla/websocket)をインストールして、migrationを実行する
