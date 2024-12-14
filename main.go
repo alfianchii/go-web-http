@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"net/http"
@@ -19,8 +20,11 @@ import (
 
 func main() {
 	config.InitENV()
+	
 	db := config.DBConnect()
 	defer db.Close()
+	mongoClient := config.InitMongoDB()
+	defer mongoClient.Disconnect(context.Background())
 	utils.InitCookie()
 
 	router := chi.NewRouter()
