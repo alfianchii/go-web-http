@@ -18,12 +18,16 @@ type ClientMessage struct {
 	Text   string `json:"text,omitempty"`
 	Send   bool   `json:"send,omitempty"`
 	Typing bool   `json:"typing,omitempty"`
+	UserAgent string `json:"userAgent,omitempty"`
+	IPAddress string `json:"ipAddress,omitempty"`
 	CreatedAt  time.Time `json:"createdAt,omitempty"`
 }
 
 type Message struct {
 	ClientID string `bson:"clientId" json:"clientId"`
 	Text  string `bson:"text" json:"text"`
+	UserAgent string `bson:"userAgent" json:"userAgent"`
+	IPAddress string `bson:"ipAddress" json:"ipAddress"`
 	CreatedAt time.Time `bson:"createdAt" json:"createdAt"`
 }
 
@@ -36,6 +40,8 @@ func SetMessage(clientMessage ClientMessage) Message {
 	return Message{
 		ClientID: clientMessage.ClientID,
 		Text: clientMessage.Text,
+		UserAgent: clientMessage.UserAgent,
+		IPAddress: clientMessage.IPAddress,
 		CreatedAt: time.Now(),
 	}
 }

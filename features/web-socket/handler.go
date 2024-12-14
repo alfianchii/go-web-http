@@ -2,6 +2,7 @@ package websocket
 
 import (
 	"log"
+	"net"
 	"net/http"
 
 	"github.com/gorilla/websocket"
@@ -22,6 +23,9 @@ func WebsocketHandler(res http.ResponseWriter, req *http.Request) {
 	}
 	defer CleanUpDisconnectedClients(client)
 
+	userAgent := req.UserAgent()
+	ip, _, _ := net.SplitHostPort(req.RemoteAddr)
+	
 	ClientsLock.Lock()
 	Clients[client] = ""
 	ClientsLock.Unlock()
@@ -47,6 +51,9 @@ func WebsocketHandler(res http.ResponseWriter, req *http.Request) {
 			delete(Typers, clientMessage.ClientID)
 		}
 
+		clientMessage.UserAgent = userAgent
+		clientMessage.IPAddress = ip
+		
 		BroadcastChan <-clientMessage
 	}
 }
