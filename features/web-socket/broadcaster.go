@@ -2,26 +2,31 @@ package websocket
 
 import (
 	"log"
+	"time"
 
 	"github.com/gorilla/websocket"
 )
 
 func BroadcastMessages() {
 	for {
-		msg := <-BroadcastChan
-
+		clientMessage := <-BroadcastChan
 		BroadcastTypers()
 
-		if msg.Send {
+		if clientMessage.Send {
 			ClientsLock.Lock()
+			message := SetMessage(clientMessage)
+
 			for client := range Clients {
-				err := client.WriteJSON(msg)
+				clientMessage.CreatedAt = time.Now()
+				err := client.WriteJSON(clientMessage)
 				if err != nil {
 					log.Printf("Error writing message: %v\n", err)
 					client.Close()
 					delete(Clients, client)
 				}
 			}
+
+			InsertMessage(message)
 			ClientsLock.Unlock()
 		}
 	}

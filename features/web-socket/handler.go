@@ -15,35 +15,38 @@ var upgrader = websocket.Upgrader{
 }
 
 func WebsocketHandler(res http.ResponseWriter, req *http.Request) {
-	conn, err := upgrader.Upgrade(res, req, nil)
+	client, err := upgrader.Upgrade(res, req, nil)
 	if err != nil {
 		log.Printf("Error upgrading connection: %v\n", err)
 		return
 	}
-	defer CleanUpDisconnectedClients(conn)
+	defer CleanUpDisconnectedClients(client)
 
 	ClientsLock.Lock()
-	Clients[conn] = ""
+	Clients[client] = ""
 	ClientsLock.Unlock()
 
+	messages := GetMessages()
+	client.WriteJSON(messages)
+
 	for {
-		var msg Message
-		err := conn.ReadJSON(&msg)
+		var clientMessage ClientMessage
+		err := client.ReadJSON(&clientMessage)
 		if err != nil {
 			log.Printf("Error reading message: %v\n", err)
 			break
 		}
 
 		ClientsLock.Lock()
-		Clients[conn] = msg.ClientID
+		Clients[client] = clientMessage.ClientID
 		ClientsLock.Unlock()
 
-		if msg.Typing && msg.Text != "" {
-			Typers[msg.ClientID] = true
-		} else if msg.ClientID != "" {
-			delete(Typers, msg.ClientID)
+		if clientMessage.Typing && clientMessage.Text != "" {
+			Typers[clientMessage.ClientID] = true
+		} else if clientMessage.ClientID != "" {
+			delete(Typers, clientMessage.ClientID)
 		}
 
-		BroadcastChan <-msg
+		BroadcastChan <-clientMessage
 	}
 }

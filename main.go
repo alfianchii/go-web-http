@@ -34,7 +34,7 @@ func main() {
 	utils.FileServer(router, "/public", http.Dir("./assets"))
 	utils.FileServer(router, "/templates", http.Dir("./templates"))
 	
-	router.Get("/ws", websocket.WebsocketHandler)
+	router.Get("/chats", websocket.WebsocketHandler)
 	go websocket.BroadcastMessages()
 
 	router.Get("/", user.HomeHandler)
