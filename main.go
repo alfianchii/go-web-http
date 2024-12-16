@@ -8,9 +8,9 @@ import (
 	"web-http/config"
 	"web-http/features/admin"
 	"web-http/features/auth"
+	"web-http/features/basic"
 	"web-http/features/officer"
 	"web-http/features/satker"
-	"web-http/features/user"
 	websocket "web-http/features/web-socket"
 	"web-http/middleware"
 	"web-http/utils"
@@ -38,13 +38,13 @@ func main() {
 	router.Get("/chats", websocket.WebsocketHandler)
 	go websocket.BroadcastMessages()
 
-	router.Get("/", user.HomeHandler)
+	router.Get("/", basic.HomeHandler)
 	router.Post("/login", auth.LoginHandler)
 	router.Post("/logout", auth.LogoutHandler)
-	router.With(middleware.AuthMiddleware).Get("/about", user.AboutHandler)
-	router.Post("/about", user.AboutEmailHandler)
-	router.Get("/greet/{name}", user.GreetHandler)
-	router.Get("/search", user.SearchHandler)
+	router.With(middleware.AuthMiddleware).Get("/about", basic.AboutHandler)
+	router.Post("/about", basic.AboutEmailHandler)
+	router.Get("/greet/{name}", basic.GreetHandler)
+	router.Get("/search", basic.SearchHandler)
 
 	router.Route("/admin", func(r chi.Router) {
 		r.Get("/", admin.AdminHandler)
