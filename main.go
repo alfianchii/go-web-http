@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"web-http/config"
 	"web-http/features/admin"
+	"web-http/features/auth"
 	"web-http/features/officer"
 	"web-http/features/satker"
 	"web-http/features/user"
@@ -20,7 +21,7 @@ import (
 
 func main() {
 	config.InitENV()
-	
+
 	db := config.DBConnect()
 	defer db.Close()
 	mongoClient := config.InitMongoDB()
@@ -38,8 +39,8 @@ func main() {
 	go websocket.BroadcastMessages()
 
 	router.Get("/", user.HomeHandler)
-	router.Post("/login", user.LoginHandler)
-	router.Post("/logout", user.LogoutHandler)
+	router.Post("/login", auth.LoginHandler)
+	router.Post("/logout", auth.LogoutHandler)
 	router.With(middleware.AuthMiddleware).Get("/about", user.AboutHandler)
 	router.Post("/about", user.AboutEmailHandler)
 	router.Get("/greet/{name}", user.GreetHandler)
