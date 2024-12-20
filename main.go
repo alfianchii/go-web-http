@@ -31,6 +31,7 @@ func main() {
 	router := chi.NewRouter()
 
 	router.Use(chiMiddleware.Logger)
+	router.Use(middleware.CORS)
 	
 	utils.FileServer(router, "/public", http.Dir("./assets"))
 	utils.FileServer(router, "/templates", http.Dir("./templates"))
