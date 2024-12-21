@@ -8,7 +8,6 @@ const generateDate = (str) => {
   const date = new Date(str);
   const options = { year: 'numeric', month: 'short', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
   const formattedDate = new Intl.DateTimeFormat('en-US', options).format(date);
-  console.log(formattedDate);
   const [day, month, year, time] = formattedDate.split(/,?\s+/);
   return `${year}, ${month} ${day} at ${time}`;
 };
