@@ -17,8 +17,8 @@
 -   [websocket](https://github.com/gorilla/websocket)
 -   [golang-migrate](https://github.com/golang-migrate/migrate)
 -   [godotenv](https://github.com/joho/godotenv)
--   [websocket w/ mongodb](https://github.com/mongodb/mongo-go-driver)
--   [JWT](https://github.com/golang-jwt/jwt)
+-   [mongodb](https://github.com/mongodb/mongo-go-driver)
+-   [Auth w/ JWT](https://github.com/golang-jwt/jwt)
 
 <h2 id="routes">👤 Routes</h2>
 
@@ -37,8 +37,10 @@
 
 ### 🧗 User
 
+-   http://localhost:3333/register
+- - GET
 -   http://localhost:3333/user
-- - POST
+- - POST (API)
 - - Param(s)
 - - - username
 - - - password
@@ -49,27 +51,27 @@
 - - - Cookie
 - - - Authorization: Bearer {token}
 -   http://localhost:3333/login
-- - POST
+- - POST (API)
 - - Param(s)
 - - - username
 - - - password
 -   http://localhost:3333/logout
-- - POST
+- - POST (API)
 - - Header(s)
 - - - Cookie
 -   http://localhost:3333/about
 - - GET
 - - Header(s)
 - - - Cookie
-- - POST
+- - POST (API)
 - - Param(s)
 - - - email
 - - - subject
 - - - content
 -   http://localhost:3333/greet/{name}
-- - GET
+- - GET (API)
 -   http://localhost:3333/search?q={query}
-- - GET
+- - GET (API)
 - - Param(s)
 - - - q
 
