@@ -3,7 +3,7 @@ import { getToken } from "./utils/token.js";
 import { validateJWT } from "./utils/token.js";
 
 const elLogout = document.getElementById("logout");
-const clientId = `User-${Math.random().toString(36).substring(7)}`;
+let clientId;
 const generateDate = (str) => str ? new Date(str).toISOString().replace('T', ' ').split('.')[0] : new Date().toISOString().replace('T', ' ').split('.')[0];
 const sendData = (socket, data) => socket.send(JSON.stringify(data));
 const initDOMElements = () => ({
@@ -78,7 +78,8 @@ const createTextElement = (type, msgEl, text) => {
 
 document.addEventListener("DOMContentLoaded", async () => {
   try {
-    await validateJWT(getToken());
+    const { data } = await validateJWT(getToken());
+    clientId = data.username;
   } catch (error) {
     window.location.href = "/login";
     console.error(error);
