@@ -1,15 +1,15 @@
 import { validateJWT } from "./utils/token.js";
 
 const loginFormEl = document.getElementById('login-form');
-const username = document.getElementById('username');
-const password = document.getElementById('password');
-const login = document.getElementById('login');
-const messages = document.getElementById('messages');
+const usernameEl = document.getElementById('username');
+const passwordEl = document.getElementById('password');
+const loginEl = document.getElementById('login');
+const notifEl = document.getElementById('notification');
 
 const loginHandler = async () => {
   const body = new FormData();
-  body.append('username', username.value);
-  body.append('password', password.value);
+  body.append('username', usernameEl.value);
+  body.append('password', passwordEl.value);
   
   const response = await fetch('/login', {
     method: 'POST',
@@ -19,7 +19,7 @@ const loginHandler = async () => {
   const result = await response.json();
   const token = result.data.token;
   const message = result.message;
-  messages.innerHTML = message;
+  notifEl.innerHTML = message;
 
   try {
     await validateJWT(token);
@@ -31,9 +31,9 @@ const loginHandler = async () => {
 }
 
 const setupLogin = () => {
-  login.addEventListener('click', loginHandler);
+  loginEl.addEventListener('click', loginHandler);
   loginFormEl.addEventListener("keypress", (event) => {
-    if (event.key === "Enter" && (username.value && password.value)) loginHandler();
+    if (event.key === "Enter" && (usernameEl.value && passwordEl.value)) loginHandler();
   });
 }
 
