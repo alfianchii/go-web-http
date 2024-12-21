@@ -16,9 +16,9 @@ const loginHandler = async () => {
     body,
   });
 
-  const result = await response.json();
-  const token = result.data.token;
-  const message = result.message;
+  const res = await response.json();
+  const token = res?.data?.token;
+  const message = res.message;
   notifEl.innerHTML = message;
 
   try {
@@ -33,7 +33,7 @@ const loginHandler = async () => {
 const setupLogin = () => {
   loginEl.addEventListener('click', loginHandler);
   loginFormEl.addEventListener("keypress", (event) => {
-    if (event.key === "Enter" && (usernameEl.value && passwordEl.value)) loginHandler();
+    if (event.key === "Enter") loginHandler();
   });
 }
 
