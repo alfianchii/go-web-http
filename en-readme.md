@@ -18,6 +18,7 @@
 -   [golang-migrate](https://github.com/golang-migrate/migrate)
 -   [godotenv](https://github.com/joho/godotenv)
 -   [websocket w/ mongodb](https://github.com/mongodb/mongo-go-driver)
+-   [JWT](https://github.com/golang-jwt/jwt)
 
 <h2 id="routes">👤 Routes</h2>
 
@@ -36,24 +37,41 @@
 
 ### 🧗 User
 
+-   http://localhost:3333/user
+- - POST
+- - Param(s)
+- - - username
+- - - password
+- - - email
 -   http://localhost:3333/
-- - GET (Websocket)
+- - GET (Chat w/ WebSocket)
+- - Header(s)
+- - - Cookie
+- - - Authorization: Bearer {token}
 -   http://localhost:3333/login
 - - POST
-- - - Param(s): username, password
+- - Param(s)
+- - - username
+- - - password
 -   http://localhost:3333/logout
 - - POST
-- - - Header(s): Cookie
+- - Header(s)
+- - - Cookie
 -   http://localhost:3333/about
 - - GET
-- - - Header(s): Cookie
+- - Header(s)
+- - - Cookie
 - - POST
-- - - Param(s): email, subject, content
+- - Param(s)
+- - - email
+- - - subject
+- - - content
 -   http://localhost:3333/greet/{name}
 - - GET
 -   http://localhost:3333/search?q={query}
 - - GET
-- - - Param(s): q
+- - Param(s)
+- - - q
 
 <h2 id="installation">💻 Installation</h2>
 
