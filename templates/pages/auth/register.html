@@ -1,21 +1,24 @@
-{{ define "title" }}Login{{ end }}
+{{ define "title" }}Register{{ end }}
 
 {{ define "content" }}
 <h1 id="header">{{ .Heading }}</h1>
 <p>{{ .Content }}</p>
-<form id="login-form">
+<form id="register-form">
   <div>
     <span>Username </span><input type="text" name="username" id="username" autofocus>
+  </div>
+  <div>
+    <span>Email </span><input type="email" name="email" id="email">
   </div>
   <div>
     <span>Password </span><input type="password" name="password" id="password">
   </div>
 </form>
 <div id="notification" style="background-color: #f87171; color: #f9fafb; width: max-content;"></div>
-<button id="login">Login</button>
-<p>Don't have account? <a href="/register">Create one</a></p>
+<button id="register">Register</button>
+<p>Go to <a href="/login">login</a></p>
 {{ end }}
 
 {{ define "script" }}
-<script type="module" src="/templates/js/login.js"></script>
+<script type="module" src="/templates/js/register.js"></script>
 {{ end }}

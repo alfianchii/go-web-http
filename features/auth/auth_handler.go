@@ -20,6 +20,25 @@ type UserLoginResponse struct {
 	Token string `json:"token"`
 }
 
+func RegisterViewHandler(res http.ResponseWriter, req *http.Request) {
+	view := template.Must(template.New("base.html").ParseFiles(
+		"templates/layouts/base.html",
+		"templates/pages/auth/register.html",
+	))
+
+	data := dto.PageData{
+		Title: "Register",
+		Heading: "Register",
+		Content: "Let's make an account for you",
+	}
+
+	err := view.Execute(res, data)
+	if err != nil {
+		http.Error(res, err.Error(), http.StatusInternalServerError)
+		return
+	}
+}
+
 func LoginViewHandler(res http.ResponseWriter, req *http.Request) {
 	view := template.Must(template.New("base.html").ParseFiles(
 		"templates/layouts/base.html",

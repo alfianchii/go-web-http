@@ -41,8 +41,9 @@ func main() {
 	go websocket.BroadcastMessages()
 
 	router.With(middleware.JWTMiddleware).Get("/", basic.HomeHandler)
-	router.Route("/login", func(r chi.Router) {
-		r.With(middleware.GuestMiddleware).Get("/", auth.LoginViewHandler)
+	router.With(middleware.GuestMiddleware).Get("/register", auth.RegisterViewHandler)
+	router.With(middleware.GuestMiddleware).Route("/login", func(r chi.Router) {
+		r.Get("/", auth.LoginViewHandler)
 		r.Post("/", auth.LoginHandler)
 	})
 	router.Post("/validate-jwt", auth.ValidateJWTHandler)
