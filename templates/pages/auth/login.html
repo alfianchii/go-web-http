@@ -3,8 +3,10 @@
 {{ define "content" }}
 <h1 id="header">{{ .Heading }}</h1>
 <p>{{ .Content }}</p>
-<input type="text" name="username" id="username" autofocus>
-<input type="password" name="password" id="password">
+<form id="login-form">
+  <input type="text" name="username" id="username" autofocus>
+  <input type="password" name="password" id="password">
+</form>
 <div id="messages"></div>
 <button id="login">Login</button>
 {{ end }}
