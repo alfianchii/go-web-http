@@ -2,7 +2,6 @@ package utils
 
 import (
 	"net/http"
-	"strings"
 	"web-http/config"
 
 	"github.com/gorilla/sessions"
@@ -16,20 +15,14 @@ var (
 func InitCookie() {
 	Store.Options = &sessions.Options{
 		Path:     "/",
-		MaxAge:   3600,
+		MaxAge:   int(config.TokenDuration.Seconds()),
 		HttpOnly: true,
 		Secure:   false,
 	}
 }
 
-func CookieToString (res http.ResponseWriter) string {
-	strCookie := ""
-	for _, cookie := range res.Header()["Set-Cookie"] {
-		if strings.Contains(cookie, config.GetENV("COOKIE_NAME")) {
-			strCookie = cookie
-			break
-		}
-	}
-
-	return strCookie
+func RemoveCookie(res http.ResponseWriter, req *http.Request, session *sessions.Session) {
+	session.Values = make(map[interface{}]interface{})
+	session.Options.MaxAge = -1
+	session.Save(req, res)
 }

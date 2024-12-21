@@ -21,8 +21,6 @@ type SatkerResponse struct {
 }
 
 func (h *DBHandler) SatkerHandler(res http.ResponseWriter, req *http.Request)  {
-  utils.ResponseSetup(res, req)
-
   var masterSatker []SatkerResponse
   query := `SELECT satker, singkatan FROM master_satker`
   err := sqlx.Select(h.DB, &masterSatker, query)

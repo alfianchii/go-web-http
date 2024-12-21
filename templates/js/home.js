@@ -1,7 +1,11 @@
-const socket = new WebSocket(`ws://${document.location.host}/chats`);
+import { logout } from "./utils/auth.js";
+import { getToken } from "./utils/token.js";
+import { validateJWT } from "./utils/token.js";
+
+const elLogout = document.getElementById("logout");
 const clientId = `User-${Math.random().toString(36).substring(7)}`;
 const generateDate = (str) => str ? new Date(str).toISOString().replace('T', ' ').split('.')[0] : new Date().toISOString().replace('T', ' ').split('.')[0];
-const sendData = (data) => socket.send(JSON.stringify(data));
+const sendData = (socket, data) => socket.send(JSON.stringify(data));
 const initDOMElements = () => ({
   elInput: document.getElementById("fullname"),
   elButton: document.getElementById("submit-message"),
@@ -10,6 +14,8 @@ const initDOMElements = () => ({
 });
 
 const setupSocket = ({ elInput, elButton, elNotif, elMessage }) => {
+  const socket = new WebSocket(`ws://${document.location.host}/chats`);
+
   if (!window.WebSocket) return elNotif.innerText = "WebSocket is not supported by your browser.";
   
   socket.onopen = () => {
@@ -17,17 +23,17 @@ const setupSocket = ({ elInput, elButton, elNotif, elMessage }) => {
 
     elButton.addEventListener("click", () => {
       if (elInput.value) {
-        sendData({ clientId, text: `${elInput.value}`, send: true });
+        sendData(socket, { clientId, text: `${elInput.value}`, send: true });
         resetInput(elInput);
       }
     });
 
-    elInput.addEventListener("input", () => sendData({ clientId, text: elInput.value, typing: true }));
+    elInput.addEventListener("input", () => sendData(socket, { clientId, text: elInput.value, typing: true }));
 
     elInput.addEventListener("keypress", (event) => {
       if (event.key === "Enter" && elInput.value) {
-        sendData({ clientId, text: `${elInput.value}`, send: true });
-        sendData({ clientId, typing: false });
+        sendData(socket, { clientId, text: `${elInput.value}`, send: true });
+        sendData(socket, { clientId, typing: false });
         resetInput(elInput);
       }
     });
@@ -60,7 +66,7 @@ const resetInput = (input) => {
 }
 
 const createTextElement = (type, msgEl, text) => {
-  newEl = document.createElement("p");
+  const newEl = document.createElement("p");
   newEl.innerText = text;
 
   if (type === "chats") msgEl.appendChild(newEl);
@@ -70,7 +76,16 @@ const createTextElement = (type, msgEl, text) => {
   }
 }
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
+  try {
+    await validateJWT(getToken());
+  } catch (error) {
+    window.location.href = "/login";
+    console.error(error);
+  }
+  
+  elLogout.addEventListener("click", async () => logout(getToken()));
+  
   const elements = initDOMElements();
   setupSocket(elements);
 });

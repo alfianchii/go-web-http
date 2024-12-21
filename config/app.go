@@ -18,6 +18,7 @@ var (
 	MongoClient *mongo.Client
 	MongoDB *mongo.Database
 	ExecTimeoutDuration = 10*time.Second
+	TokenDuration = 1*time.Hour
 )
 
 func InitENV() {

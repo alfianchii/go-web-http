@@ -11,6 +11,7 @@ import (
 	"web-http/features/basic"
 	"web-http/features/officer"
 	"web-http/features/satker"
+	"web-http/features/user"
 	websocket "web-http/features/web-socket"
 	"web-http/middleware"
 	"web-http/utils"
@@ -39,8 +40,12 @@ func main() {
 	router.Get("/chats", websocket.WebsocketHandler)
 	go websocket.BroadcastMessages()
 
-	router.Get("/", basic.HomeHandler)
-	router.Post("/login", auth.LoginHandler)
+	router.With(middleware.JWTMiddleware).Get("/", basic.HomeHandler)
+	router.Route("/login", func(r chi.Router) {
+		r.With(middleware.GuestMiddleware).Get("/", auth.LoginViewHandler)
+		r.Post("/", auth.LoginHandler)
+	})
+	router.Post("/validate-jwt", auth.ValidateJWTHandler)
 	router.Post("/logout", auth.LogoutHandler)
 	router.With(middleware.AuthMiddleware).Get("/about", basic.AboutHandler)
 	router.Post("/about", basic.AboutEmailHandler)

@@ -4,16 +4,11 @@ import (
 	"html/template"
 	"net/http"
 	"web-http/config"
+	"web-http/dto"
 	"web-http/utils"
 
 	"github.com/go-chi/chi/v5"
 )
-
-type PageData struct {
-	Title string
-	Heading string
-	Content string
-}
 
 type ContactDetails struct {
 	Email string `json:"email"`
@@ -31,7 +26,7 @@ func HomeHandler(res http.ResponseWriter, req *http.Request) {
 		"templates/pages/home.html",
 	))
 
-	data := PageData{
+	data := dto.PageData{
 		Title: "Home",
 		Heading: "Welcome to Go web development",
 		Content: "This is a simple web application using Go programming language.",
@@ -45,7 +40,6 @@ func HomeHandler(res http.ResponseWriter, req *http.Request) {
 }
 
 func AboutHandler(res http.ResponseWriter, req *http.Request) {
-	utils.ResponseSetup(res, req)
 	session, _ := utils.Store.Get(req, config.GetENV("COOKIE_NAME"))
 	username := session.Values["username"].(string)
 
@@ -53,7 +47,6 @@ func AboutHandler(res http.ResponseWriter, req *http.Request) {
 }
 
 func AboutEmailHandler(res http.ResponseWriter, req *http.Request) {
-	utils.ResponseSetup(res, req)
 
 	details := ContactDetails{
 		Email: req.FormValue("email"),
@@ -65,14 +58,12 @@ func AboutEmailHandler(res http.ResponseWriter, req *http.Request) {
 }
 
 func GreetHandler(res http.ResponseWriter, req *http.Request) {
-	utils.ResponseSetup(res, req)
 
 	name := chi.URLParam(req, "name")
 	utils.SendResponse(res, "Hello, " + name + "!", http.StatusOK, nil)
 }
 
 func SearchHandler(res http.ResponseWriter, req *http.Request) {
-	utils.ResponseSetup(res, req)
 	
 	query := req.URL.Query().Get("q")
 	if query == "" {

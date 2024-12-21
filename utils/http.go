@@ -13,11 +13,13 @@ func SetHeaderJson(res http.ResponseWriter) {
 	res.Header().Set("Content-Type", "application/json")
 }
 
-func ResponseSetup(res http.ResponseWriter, req *http.Request) {
+func ResponseSetup(res http.ResponseWriter) {
 	SetHeaderJson(res)
 }
 
 func SendResponse(res http.ResponseWriter, msg string, status int, data interface{}) {
+	ResponseSetup(res)
+
 	response := dto.Response{
 		Message: msg,
 		Status: status,
