@@ -21,12 +21,14 @@ const loginHandler = async () => {
   const message = res.message;
   notifEl.innerHTML = message;
 
-  try {
-    await validateJWT(token);
-    sessionStorage.setItem('token', token);
-    window.location.href = '/';
-  } catch (error) {
-    console.error(error);
+  if (token) {
+    try {
+      await validateJWT(token);
+      sessionStorage.setItem('token', token);
+      window.location.href = '/';
+    } catch (error) {
+      console.error(error);
+    }
   }
 }
 
