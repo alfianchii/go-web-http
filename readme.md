@@ -18,8 +18,8 @@
 -   [Go Postgres Driver](https://github.com/lib/pq)
 -   [sqlx](https://github.com/jmoiron/sqlx)
 -   [websocket](https://github.com/gorilla/websocket)
--   [golang-migrate](https://github.com/gorilla/websocket)
--   [godotenv](https://github.com/gorilla/websocket)
+-   [golang-migrate](https://github.com/golang-migrate/migrate)
+-   [godotenv](https://github.com/joho/godotenv)
 -   [websocket w/ mongodb](https://github.com/mongodb/mongo-go-driver)
 
 <h2 id="routes">👤 ルート</h2>
@@ -81,7 +81,7 @@ MONGODB_USERNAME=your-username
 MONGODB_PASSWORD=your-password
 ```
 
-3. ローカルに、[golang-migrate](https://github.com/gorilla/websocket)をインストールして、migrationを実行する
+3. ローカルに、[golang-migrate](https://github.com/golang-migrate/migrate)をインストールして、migrationを実行する
 ```bash
 GOBIN=$(pwd)/bin go install -tags 'postgres' github.com/golang-migrate/migrate/v4/cmd/migrate@latest
 ./bin/migrate -database "postgres://your-username:your-password@127.0.0.1:5432/go_web_http?sslmode=disable" -path ./migrations up
