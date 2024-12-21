@@ -55,6 +55,10 @@ func main() {
 		r.Get("/satker", satker.Handler(db).SatkerHandler)
 	})
 
+	router.Route("/user", func(r chi.Router) {
+		r.Post("/", user.CreateUserHandler)
+	})
+
 	router.Mount("/officer", officer.Router())
 
 	fmt.Printf("Server is running on http://%s\n", config.Address)
