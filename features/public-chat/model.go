@@ -14,13 +14,14 @@ import (
 var collectionName string = "chats"
 
 type ClientChat struct {
-	Username  string `json:"username"`
-	Text   string `json:"text,omitempty"`
-	Send   bool   `json:"send,omitempty"`
-	Typing bool   `json:"typing,omitempty"`
+	Username string `json:"username"`
+	Text string `json:"text,omitempty"`
+	Send bool `json:"send,omitempty"`
+	Typing bool `json:"typing,omitempty"`
 	UserAgent string `json:"userAgent,omitempty"`
 	IPAddress string `json:"ipAddress,omitempty"`
-	CreatedAt  time.Time `json:"createdAt,omitempty"`
+	CreatedAt time.Time `json:"createdAt,omitempty"`
+	Token string `json:"token"`
 }
 
 type Chat struct {

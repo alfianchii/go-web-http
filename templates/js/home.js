@@ -38,8 +38,7 @@ const setupSocket = ({ inputEl, buttonEl, notifEl, chatListEl }) => {
 
     inputEl.addEventListener("keypress", (event) => {
       if (event.key === "Enter" && inputEl.value) {
-        sendData(ws, { username, text: `${inputEl.value}`, send: true });
-        sendData(ws, { username, typing: false });
+        sendData(ws, { username, text: `${inputEl.value}`, send: true, typing: false });
         resetInput(inputEl);
       }
     });
