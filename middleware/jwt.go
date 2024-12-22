@@ -9,11 +9,9 @@ import (
 func JWTMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 		session, _ := utils.Store.Get(req, config.GetENV("COOKIE_NAME"))
-		
 		jwtToken := session.Values["token"]
-		username := session.Values["username"]
 
-		if jwtToken == nil || username == nil {
+		if jwtToken == nil {
 			http.Redirect(res, req, "/login", http.StatusSeeOther)
 			return
 		}
