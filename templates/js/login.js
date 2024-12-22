@@ -19,7 +19,9 @@ const loginHandler = async () => {
   const res = await response.json();
   const token = res?.data?.token;
   const message = res.message;
-  notifEl.innerHTML = message;
+  notifEl.innerHTML = `${message}`;
+
+  if (response.ok) notifEl.style.backgroundColor = "#22c55e";
 
   if (token) {
     try {
