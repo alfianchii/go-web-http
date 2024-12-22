@@ -10,9 +10,9 @@ import (
 	"web-http/features/auth"
 	"web-http/features/basic"
 	"web-http/features/officer"
+	websocket "web-http/features/public-chat"
 	"web-http/features/satker"
 	"web-http/features/user"
-	websocket "web-http/features/web-socket"
 	"web-http/middleware"
 	"web-http/utils"
 
