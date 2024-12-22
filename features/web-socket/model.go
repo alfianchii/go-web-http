@@ -14,7 +14,7 @@ import (
 var collectionName string = "messages"
 
 type ClientMessage struct {
-	ClientID  string `json:"clientId"`
+	Username  string `json:"username"`
 	Text   string `json:"text,omitempty"`
 	Send   bool   `json:"send,omitempty"`
 	Typing bool   `json:"typing,omitempty"`
@@ -24,11 +24,11 @@ type ClientMessage struct {
 }
 
 type Message struct {
-	ClientID string `bson:"clientId" json:"clientId"`
+	Username string `bson:"username" json:"username"`
 	Text  string `bson:"text" json:"text"`
-	UserAgent string `bson:"userAgent" json:"userAgent"`
-	IPAddress string `bson:"ipAddress" json:"ipAddress"`
-	CreatedAt time.Time `bson:"createdAt" json:"createdAt"`
+	UserAgent string `bson:"user_agent" json:"userAgent"`
+	IPAddress string `bson:"ip_address" json:"ipAddress"`
+	CreatedAt time.Time `bson:"created_at" json:"createdAt"`
 }
 
 type Client struct {
@@ -38,7 +38,7 @@ type Client struct {
 
 func SetMessage(clientMessage ClientMessage) Message {
 	return Message{
-		ClientID: clientMessage.ClientID,
+		Username: clientMessage.Username,
 		Text: clientMessage.Text,
 		UserAgent: clientMessage.UserAgent,
 		IPAddress: clientMessage.IPAddress,

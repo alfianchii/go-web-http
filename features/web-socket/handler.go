@@ -42,13 +42,13 @@ func WebsocketHandler(res http.ResponseWriter, req *http.Request) {
 		}
 
 		ClientsLock.Lock()
-		Clients[client] = clientMessage.ClientID
+		Clients[client] = clientMessage.Username
 		ClientsLock.Unlock()
 
 		if clientMessage.Typing && clientMessage.Text != "" {
-			Typers[clientMessage.ClientID] = true
-		} else if clientMessage.ClientID != "" {
-			delete(Typers, clientMessage.ClientID)
+			Typers[clientMessage.Username] = true
+		} else if clientMessage.Username != "" {
+			delete(Typers, clientMessage.Username)
 		}
 
 		clientMessage.UserAgent = userAgent

@@ -3,7 +3,7 @@ import { getToken } from "./utils/token.js";
 import { validateJWT } from "./utils/token.js";
 
 const elLogout = document.getElementById("logout");
-let clientId;
+let username;
 const generateDate = (str) => {
   const date = new Date(str);
   const options = { year: 'numeric', month: 'short', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
@@ -29,17 +29,17 @@ const setupSocket = ({ inputEl, buttonEl, notifEl, messageListEl }) => {
 
     buttonEl.addEventListener("click", () => {
       if (inputEl.value) {
-        sendData(ws, { clientId, text: `${inputEl.value}`, send: true });
+        sendData(ws, { username, text: `${inputEl.value}`, send: true });
         resetInput(inputEl);
       }
     });
 
-    inputEl.addEventListener("input", () => sendData(ws, { clientId, text: inputEl.value, typing: true }));
+    inputEl.addEventListener("input", () => sendData(ws, { username, text: inputEl.value, typing: true }));
 
     inputEl.addEventListener("keypress", (event) => {
       if (event.key === "Enter" && inputEl.value) {
-        sendData(ws, { clientId, text: `${inputEl.value}`, send: true });
-        sendData(ws, { clientId, typing: false });
+        sendData(ws, { username, text: `${inputEl.value}`, send: true });
+        sendData(ws, { username, typing: false });
         resetInput(inputEl);
       }
     });
@@ -82,12 +82,12 @@ const createTextElement = (type, msgEl, data) => {
   }
 }
 
-const createText = (data) => `${generateDate(data.createdAt)} - <span style='background-color: yellow;'>${data.clientId}</span>: ${data.text}`
+const createText = (data) => `${generateDate(data.createdAt)} - <span style='background-color: yellow;'>${data.username}</span>: ${data.text}`
 
 document.addEventListener("DOMContentLoaded", async () => {
   try {
     const { data } = await validateJWT(getToken());
-    clientId = data.username;
+    username = data.username;
   } catch (error) {
     window.location.href = "/login";
     console.error(error);
