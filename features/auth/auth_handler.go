@@ -121,7 +121,7 @@ func ValidateJWTHandler(res http.ResponseWriter, req *http.Request) {
 	session, _ := utils.Store.Get(req, config.GetENV("COOKIE_NAME"))
 	username := session.Values["username"].(string)
 	authHeader := req.Header.Get("Authorization")[len("Bearer "):]
-	
+
 	if len(authHeader) == 4 || session.Values["token"] == nil {
 		userModel.SetUserOffline(username)
 		utils.RemoveCookie(res, req, session)
@@ -134,6 +134,13 @@ func ValidateJWTHandler(res http.ResponseWriter, req *http.Request) {
 		userModel.SetUserOffline(username)
 		utils.RemoveCookie(res, req, session)
 		utils.SendResponse(res, "Unauthorized; invalid authorization token.", http.StatusUnauthorized, nil)
+		return
+	}
+
+	_, err = userModel.GetUserByUsername(claims.Username)
+	if err != nil {
+		utils.RemoveCookie(res, req, session)
+		utils.SendResponse(res, "Unauthorized; user not found.", http.StatusUnauthorized, nil)
 		return
 	}
 

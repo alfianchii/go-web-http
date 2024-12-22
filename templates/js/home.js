@@ -89,6 +89,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const { data } = await validateJWT(getToken());
     username = data.username;
   } catch (error) {
+    logout(getToken());
     window.location.href = "/login";
     console.error(error);
   }

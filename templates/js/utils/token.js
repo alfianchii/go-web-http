@@ -10,7 +10,7 @@ export const validateJWT = async (token) => {
       },
     });
 
-    if (!response.ok) throw new Error(response.statusText);
+    if (!response.ok) throw new Error((await response.json()).message);
     
     return await response.json();
   } catch (err) {
