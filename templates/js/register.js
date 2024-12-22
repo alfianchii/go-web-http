@@ -22,6 +22,7 @@ const registerHandler = async () => {
 
   if (response.ok) {
     notifEl.innerHTML = `${message}. Let's <a href="/login">login</a> to your account`;
+    notifEl.style.backgroundColor = "#22c55e";
   }
 }
 
