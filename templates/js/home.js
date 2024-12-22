@@ -11,7 +11,7 @@ const generateDate = (str) => {
   const [day, month, year, time] = formattedDate.split(/,?\s+/);
   return `${year}, ${month} ${day} at ${time}`;
 };
-const sendData = (socket, data) => socket.send(JSON.stringify(data));
+const sendData = (ws, data) => ws.send(JSON.stringify(data));
 const initDOMElements = () => ({
   inputEl: document.getElementById("chat"),
   buttonEl: document.getElementById("submit-message"),
@@ -20,32 +20,32 @@ const initDOMElements = () => ({
 });
 
 const setupSocket = ({ inputEl, buttonEl, notifEl, messageListEl }) => {
-  const socket = new WebSocket(`ws://${document.location.host}/chats`);
+  const ws = new WebSocket(`ws://${document.location.host}/chats`);
 
   if (!window.WebSocket) return notifEl.innerText = "WebSocket is not supported by your browser.";
   
-  socket.onopen = () => {
+  ws.onopen = () => {
     console.log("WebSocket connection established");
 
     buttonEl.addEventListener("click", () => {
       if (inputEl.value) {
-        sendData(socket, { clientId, text: `${inputEl.value}`, send: true });
+        sendData(ws, { clientId, text: `${inputEl.value}`, send: true });
         resetInput(inputEl);
       }
     });
 
-    inputEl.addEventListener("input", () => sendData(socket, { clientId, text: inputEl.value, typing: true }));
+    inputEl.addEventListener("input", () => sendData(ws, { clientId, text: inputEl.value, typing: true }));
 
     inputEl.addEventListener("keypress", (event) => {
       if (event.key === "Enter" && inputEl.value) {
-        sendData(socket, { clientId, text: `${inputEl.value}`, send: true });
-        sendData(socket, { clientId, typing: false });
+        sendData(ws, { clientId, text: `${inputEl.value}`, send: true });
+        sendData(ws, { clientId, typing: false });
         resetInput(inputEl);
       }
     });
   }
 
-  socket.onmessage = (event) => {
+  ws.onmessage = (event) => {
     const data = JSON.parse(event.data);
     displayChats(messageListEl, data)
     if (data?.typers) updateNotification(notifEl, data.typers);
