@@ -14,12 +14,12 @@ const generateDate = (str) => {
 const sendData = (ws, data) => ws.send(JSON.stringify(data));
 const initDOMElements = () => ({
   inputEl: document.getElementById("chat"),
-  buttonEl: document.getElementById("submit-message"),
+  buttonEl: document.getElementById("submit-chat"),
   notifEl: document.getElementById("notification"),
-  messageListEl: document.getElementById("messageList"),
+  chatListEl: document.getElementById("chat-list"),
 });
 
-const setupSocket = ({ inputEl, buttonEl, notifEl, messageListEl }) => {
+const setupSocket = ({ inputEl, buttonEl, notifEl, chatListEl }) => {
   const ws = new WebSocket(`ws://${document.location.host}/chats`);
 
   if (!window.WebSocket) return notifEl.innerText = "WebSocket is not supported by your browser.";
@@ -47,9 +47,9 @@ const setupSocket = ({ inputEl, buttonEl, notifEl, messageListEl }) => {
 
   ws.onmessage = (event) => {
     const data = JSON.parse(event.data);
-    displayChats(messageListEl, data)
+    displayChats(chatListEl, data)
     if (data?.typers) updateNotification(notifEl, data.typers);
-    if (data?.send) displayMessage(messageListEl, data);
+    if (data?.send) displayChat(chatListEl, data);
   };
 }
 
@@ -64,7 +64,7 @@ const updateNotification = (notifEl, typers) => {
   if (typers.length > 1) notifEl.innerText = `${typers.join(", ")} are typing...`;
 }
 
-const displayMessage = (msgEl, message) => createTextElement("message", msgEl, message);
+const displayChat = (msgEl, chat) => createTextElement("chat", msgEl, chat);
 
 const resetInput = (input) => {
   input.focus();
@@ -76,7 +76,7 @@ const createTextElement = (type, msgEl, data) => {
   newEl.innerHTML = createText(data);
 
   if (type === "chats") msgEl.appendChild(newEl);
-  if (type === "message") {
+  if (type === "chat") {
     if (msgEl.firstChild) msgEl.insertBefore(newEl, msgEl.firstChild);
     else msgEl.appendChild(newEl);
   }

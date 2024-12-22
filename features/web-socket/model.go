@@ -11,9 +11,9 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-var collectionName string = "messages"
+var collectionName string = "chats"
 
-type ClientMessage struct {
+type ClientChat struct {
 	Username  string `json:"username"`
 	Text   string `json:"text,omitempty"`
 	Send   bool   `json:"send,omitempty"`
@@ -23,7 +23,7 @@ type ClientMessage struct {
 	CreatedAt  time.Time `json:"createdAt,omitempty"`
 }
 
-type Message struct {
+type Chat struct {
 	Username string `bson:"username" json:"username"`
 	Text  string `bson:"text" json:"text"`
 	UserAgent string `bson:"user_agent" json:"userAgent"`
@@ -36,40 +36,40 @@ type Client struct {
 	Conn *websocket.Conn
 }
 
-func SetMessage(clientMessage ClientMessage) Message {
-	return Message{
-		Username: clientMessage.Username,
-		Text: clientMessage.Text,
-		UserAgent: clientMessage.UserAgent,
-		IPAddress: clientMessage.IPAddress,
+func SetChat(clientChat ClientChat) Chat {
+	return Chat{
+		Username: clientChat.Username,
+		Text: clientChat.Text,
+		UserAgent: clientChat.UserAgent,
+		IPAddress: clientChat.IPAddress,
 		CreatedAt: time.Now(),
 	}
 }
 
-func InsertMessage(message Message) {
+func InsertChat(chat Chat) {
 	var ctx, cancel = config.CtxTime()
 	defer cancel()
 
-	_, err := config.MongoDB.Collection(collectionName).InsertOne(ctx, message)
+	_, err := config.MongoDB.Collection(collectionName).InsertOne(ctx, chat)
 	if err != nil {
-		log.Printf("Error inserting message: %v\n", err)
+		log.Printf("Error inserting chat: %v\n", err)
 	}
 }
 
-func GetMessages() []Message {
+func GetChats() []Chat {
 	var ctx, cancel = config.CtxTime()
 	defer cancel()
 
 	findOptions := options.Find().SetSort(bson.D{{Key: "createdAt", Value: -1}})
 	cursor, err := config.MongoDB.Collection(collectionName).Find(ctx, bson.M{}, findOptions)
 	if err != nil {
-		log.Printf("Error getting messages: %v\n", err)
+		log.Printf("Error getting chats: %v\n", err)
 	}
 
-	var messages []Message
-	if err = cursor.All(context.Background(), &messages); err != nil {
-		log.Printf("Error decoding messages: %v\n", err)
+	var chats []Chat
+	if err = cursor.All(context.Background(), &chats); err != nil {
+		log.Printf("Error decoding chats: %v\n", err)
 	}
 	
-	return messages
+	return chats
 }

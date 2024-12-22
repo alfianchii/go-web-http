@@ -7,26 +7,26 @@ import (
 	"github.com/gorilla/websocket"
 )
 
-func BroadcastMessages() {
+func BroadcastChats() {
 	for {
-		clientMessage := <-BroadcastChan
+		clientChat := <-BroadcastChan
 		BroadcastTypers()
 
-		if clientMessage.Send {
+		if clientChat.Send {
 			ClientsLock.Lock()
-			message := SetMessage(clientMessage)
+			chat := SetChat(clientChat)
 
 			for client := range Clients {
-				clientMessage.CreatedAt = time.Now()
-				err := client.WriteJSON(clientMessage)
+				clientChat.CreatedAt = time.Now()
+				err := client.WriteJSON(clientChat)
 				if err != nil {
-					log.Printf("Error writing message: %v\n", err)
+					log.Printf("Error writing chat: %v\n", err)
 					client.Close()
 					delete(Clients, client)
 				}
 			}
 
-			InsertMessage(message)
+			InsertChat(chat)
 			ClientsLock.Unlock()
 		}
 	}

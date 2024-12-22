@@ -11,5 +11,5 @@ var (
 	Typers = make(map[string]bool)
 	ClientsLock sync.Mutex
 	// This is a ref just like on Nuxt
-	BroadcastChan = make(chan ClientMessage)
+	BroadcastChan = make(chan ClientChat)
 )

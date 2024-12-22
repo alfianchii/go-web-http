@@ -15,7 +15,7 @@ var upgrader = websocket.Upgrader{
 	},
 }
 
-func WebsocketHandler(res http.ResponseWriter, req *http.Request) {
+func ChatsHandler(res http.ResponseWriter, req *http.Request) {
 	client, err := upgrader.Upgrade(res, req, nil)
 	if err != nil {
 		log.Printf("Error upgrading connection: %v\n", err)
@@ -30,30 +30,30 @@ func WebsocketHandler(res http.ResponseWriter, req *http.Request) {
 	Clients[client] = ""
 	ClientsLock.Unlock()
 
-	messages := GetMessages()
-	client.WriteJSON(messages)
+	chats := GetChats()
+	client.WriteJSON(chats)
 
 	for {
-		var clientMessage ClientMessage
-		err := client.ReadJSON(&clientMessage)
+		var clientChat ClientChat
+		err := client.ReadJSON(&clientChat)
 		if err != nil {
-			log.Printf("Error reading message: %v\n", err)
+			log.Printf("Error reading chat: %v\n", err)
 			break
 		}
 
 		ClientsLock.Lock()
-		Clients[client] = clientMessage.Username
+		Clients[client] = clientChat.Username
 		ClientsLock.Unlock()
 
-		if clientMessage.Typing && clientMessage.Text != "" {
-			Typers[clientMessage.Username] = true
-		} else if clientMessage.Username != "" {
-			delete(Typers, clientMessage.Username)
+		if clientChat.Typing && clientChat.Text != "" {
+			Typers[clientChat.Username] = true
+		} else if clientChat.Username != "" {
+			delete(Typers, clientChat.Username)
 		}
 
-		clientMessage.UserAgent = userAgent
-		clientMessage.IPAddress = ip
+		clientChat.UserAgent = userAgent
+		clientChat.IPAddress = ip
 		
-		BroadcastChan <-clientMessage
+		BroadcastChan <-clientChat
 	}
 }
