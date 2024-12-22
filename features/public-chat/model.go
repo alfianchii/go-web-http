@@ -26,9 +26,9 @@ type ClientChat struct {
 type Chat struct {
 	Username string `bson:"username" json:"username"`
 	Text  string `bson:"text" json:"text"`
-	UserAgent string `bson:"user_agent" json:"userAgent"`
-	IPAddress string `bson:"ip_address" json:"ipAddress"`
-	CreatedAt time.Time `bson:"created_at" json:"createdAt"`
+	UserAgent string `bson:"userAgent" json:"userAgent"`
+	IPAddress string `bson:"ipAddress" json:"ipAddress"`
+	CreatedAt time.Time `bson:"createdAt" json:"createdAt"`
 }
 
 type Client struct {

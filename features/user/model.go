@@ -13,9 +13,9 @@ type User struct {
 	Username string `bson:"username" json:"username"`
 	Password string `bson:"password" json:"password"`
 	Email string `bson:"email" json:"email"`
-	IsOnline bool `bson:"is_online" json:"isOnline"`
-	CreatedAt time.Time `bson:"created_at" json:"createdAt"`
-	UpdatedAt time.Time `bson:"updated_at" json:"updatedAt"`
+	IsOnline bool `bson:"isOnline" json:"isOnline"`
+	CreatedAt time.Time `bson:"createdAt" json:"createdAt"`
+	UpdatedAt time.Time `bson:"updatedAt" json:"updatedAt"`
 }
 
 type UserResponse struct {
