@@ -32,6 +32,7 @@ func ChatsHandler(res http.ResponseWriter, req *http.Request) {
 
 	chats := GetChats()
 	client.WriteJSON(chats)
+	BroadcastTypers()
 
 	for {
 		var clientChat ClientChat
