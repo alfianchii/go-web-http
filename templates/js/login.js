@@ -22,6 +22,7 @@ const loginHandler = async () => {
   notifEl.innerHTML = `${message}`;
 
   if (response.ok) notifEl.style.backgroundColor = "#22c55e";
+  else notifEl.style.backgroundColor = "#f44336";
 
   if (token) {
     try {
