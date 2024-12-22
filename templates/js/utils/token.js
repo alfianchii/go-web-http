@@ -1,12 +1,12 @@
-export const validateJWT = async (token) => {
+import { logout } from "./auth.js"
+
+export const validateJWT = async (token = getToken()) => {
   try {
-    const jwtToken = token || getToken();
-    
     const response = await fetch('/validate-jwt', {
       method: 'POST',
       credentials: 'include',
       headers: {
-        Authorization: `Bearer ${jwtToken}`,
+        Authorization: `Bearer ${token}`,
       },
     });
 
@@ -17,5 +17,12 @@ export const validateJWT = async (token) => {
     return Promise.reject(err);
   }
 }
+
+export const invalidateSession = async (error) => {
+  sessionStorage.removeItem("token");
+  await logout(getToken());
+  window.location.href = "/login";
+  console.error(error);
+};
 
 export const getToken = () => sessionStorage.getItem('token');

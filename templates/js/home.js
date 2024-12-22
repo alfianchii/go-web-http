@@ -1,5 +1,5 @@
 import { logout } from "./utils/auth.js";
-import { getToken } from "./utils/token.js";
+import { getToken, invalidateSession } from "./utils/token.js";
 import { validateJWT } from "./utils/token.js";
 
 const elLogout = document.getElementById("logout");
@@ -11,7 +11,14 @@ const generateDate = (str) => {
   const [day, month, year, time] = formattedDate.split(/,?\s+/);
   return `${year}, ${month} ${day} at ${time}`;
 };
-const sendData = (ws, data) => ws.send(JSON.stringify(data));
+const sendData = async (ws, data) => {
+  ws.send(JSON.stringify(data));
+  try {
+    await validateJWT(getToken());
+  } catch (error) {
+    await invalidateSession(error);
+  }
+};
 const initDOMElements = () => ({
   inputEl: document.getElementById("chat"),
   buttonEl: document.getElementById("submit-chat"),
@@ -88,9 +95,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const { data } = await validateJWT(getToken());
     username = data.username;
   } catch (error) {
-    logout(getToken());
-    window.location.href = "/login";
-    console.error(error);
+    await invalidateSession(error);
   }
   
   elLogout.addEventListener("click", async () => logout(getToken()));
