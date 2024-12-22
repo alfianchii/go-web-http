@@ -27,6 +27,27 @@ type UserResponse struct {
 	UpdatedAt time.Time `json:"updatedAt"`
 }
 
+func CreateUser(user User) (UserResponse, error) {
+	var ctx, cancel = config.CtxTime()
+	defer cancel()
+
+	var userResponse UserResponse = UserResponse{
+		UserId: user.UserId,
+		Username: user.Username,
+		Email: user.Email,
+		IsOnline: user.IsOnline,
+		CreatedAt: user.CreatedAt,
+		UpdatedAt: user.UpdatedAt,
+	}
+	
+	_, err := config.MongoDB.Collection("users").InsertOne(ctx, user)
+	if err != nil {
+		return userResponse, err
+	}
+
+	return userResponse, nil
+}
+
 func GetUserByUsername(username string) (User, error) {
 	var ctx, cancel = config.CtxTime()
 	defer cancel()
@@ -38,6 +59,24 @@ func GetUserByUsername(username string) (User, error) {
 	}
 
 	return user, nil
+}
+
+func IsUsernameExist(username string) bool {
+	var ctx, cancel = config.CtxTime()
+	defer cancel()
+
+	isExist := config.MongoDB.Collection("users").FindOne(ctx, bson.M{"username": username}).Err()
+
+	return isExist == nil
+}
+
+func IsEmailExist(email string) bool {
+	var ctx, cancel = config.CtxTime()
+	defer cancel()
+
+	isExist := config.MongoDB.Collection("users").FindOne(ctx, bson.M{"email": email}).Err()
+
+	return isExist == nil
 }
 
 func SetUserOnline(username string) error {

@@ -42,6 +42,9 @@ func main() {
 
 	router.With(middleware.JWTMiddleware).Get("/", basic.HomeHandler)
 	router.With(middleware.GuestMiddleware).Get("/register", auth.RegisterViewHandler)
+	router.Route("/user", func(r chi.Router) {
+		r.Post("/", user.CreateUserHandler)
+	})
 	router.With(middleware.GuestMiddleware).Route("/login", func(r chi.Router) {
 		r.Get("/", auth.LoginViewHandler)
 		r.Post("/", auth.LoginHandler)
@@ -59,10 +62,6 @@ func main() {
 		r.Get("/settings", admin.AdminSettingsHandler)
 		r.Get("/books/{title}/page/{page}", admin.AdminBookPageHandler)
 		r.Get("/satker", satker.Handler(db).SatkerHandler)
-	})
-
-	router.Route("/user", func(r chi.Router) {
-		r.Post("/", user.CreateUserHandler)
 	})
 
 	router.Mount("/officer", officer.Router())
