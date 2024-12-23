@@ -85,7 +85,7 @@ func SetUserOnline(username string) error {
 	var ctx, cancel = config.CtxTime()
 	defer cancel()
 
-	_, err := config.MongoDB.Collection(collectionName).UpdateOne(ctx, bson.M{"username": username}, bson.M{"$set": bson.M{"is_online": true}})
+	_, err := config.MongoDB.Collection(collectionName).UpdateOne(ctx, bson.M{"username": username}, bson.M{"$set": bson.M{"isOnline": true}})
 	if err != nil {
 		http.Error(nil, err.Error(), http.StatusInternalServerError)
 		return err
@@ -98,7 +98,7 @@ func SetUserOffline(username string) error {
 	var ctx, cancel = config.CtxTime()
 	defer cancel()
 
-	_, err := config.MongoDB.Collection(collectionName).UpdateOne(ctx, bson.M{"username": username}, bson.M{"$set": bson.M{"is_online": false}})
+	_, err := config.MongoDB.Collection(collectionName).UpdateOne(ctx, bson.M{"username": username}, bson.M{"$set": bson.M{"isOnline": false}})
 	if err != nil {
 		http.Error(nil, err.Error(), http.StatusInternalServerError)
 		return err
