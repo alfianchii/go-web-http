@@ -11,7 +11,7 @@ import (
 var collectionName string = "users"
 
 type User struct {
-	UserId string `bson:"user_id,omitempty" json:"userId"`
+	UserId string `bson:"userId,omitempty" json:"userId"`
 	Username string `bson:"username" json:"username"`
 	Password string `bson:"password" json:"password"`
 	Email string `bson:"email" json:"email"`
