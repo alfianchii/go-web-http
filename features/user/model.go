@@ -8,6 +8,8 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 )
 
+var collectionName string = "users"
+
 type User struct {
 	UserId string `bson:"user_id,omitempty" json:"userId"`
 	Username string `bson:"username" json:"username"`
@@ -40,7 +42,7 @@ func CreateUser(user User) (UserResponse, error) {
 		UpdatedAt: user.UpdatedAt,
 	}
 	
-	_, err := config.MongoDB.Collection("users").InsertOne(ctx, user)
+	_, err := config.MongoDB.Collection(collectionName).InsertOne(ctx, user)
 	if err != nil {
 		return userResponse, err
 	}
@@ -53,7 +55,7 @@ func GetUserByUsername(username string) (User, error) {
 	defer cancel()
 
 	var user User
-	err := config.MongoDB.Collection("users").FindOne(ctx, bson.M{"username": username}).Decode(&user)
+	err := config.MongoDB.Collection(collectionName).FindOne(ctx, bson.M{"username": username}).Decode(&user)
 	if err != nil {
 		return user, err
 	}
@@ -65,7 +67,7 @@ func IsUsernameExist(username string) bool {
 	var ctx, cancel = config.CtxTime()
 	defer cancel()
 
-	isExist := config.MongoDB.Collection("users").FindOne(ctx, bson.M{"username": username}).Err()
+	isExist := config.MongoDB.Collection(collectionName).FindOne(ctx, bson.M{"username": username}).Err()
 
 	return isExist == nil
 }
@@ -74,7 +76,7 @@ func IsEmailExist(email string) bool {
 	var ctx, cancel = config.CtxTime()
 	defer cancel()
 
-	isExist := config.MongoDB.Collection("users").FindOne(ctx, bson.M{"email": email}).Err()
+	isExist := config.MongoDB.Collection(collectionName).FindOne(ctx, bson.M{"email": email}).Err()
 
 	return isExist == nil
 }
@@ -83,7 +85,7 @@ func SetUserOnline(username string) error {
 	var ctx, cancel = config.CtxTime()
 	defer cancel()
 
-	_, err := config.MongoDB.Collection("users").UpdateOne(ctx, bson.M{"username": username}, bson.M{"$set": bson.M{"is_online": true}})
+	_, err := config.MongoDB.Collection(collectionName).UpdateOne(ctx, bson.M{"username": username}, bson.M{"$set": bson.M{"is_online": true}})
 	if err != nil {
 		http.Error(nil, err.Error(), http.StatusInternalServerError)
 		return err
@@ -96,7 +98,7 @@ func SetUserOffline(username string) error {
 	var ctx, cancel = config.CtxTime()
 	defer cancel()
 
-	_, err := config.MongoDB.Collection("users").UpdateOne(ctx, bson.M{"username": username}, bson.M{"$set": bson.M{"is_online": false}})
+	_, err := config.MongoDB.Collection(collectionName).UpdateOne(ctx, bson.M{"username": username}, bson.M{"$set": bson.M{"is_online": false}})
 	if err != nil {
 		http.Error(nil, err.Error(), http.StatusInternalServerError)
 		return err
