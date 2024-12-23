@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"fmt"
 	"time"
 	"web-http/config"
 
@@ -44,4 +45,18 @@ func ValidateJWT(tokenString string) (*Claims, error) {
 		return nil, jwt.ErrTokenInvalidClaims
 	}
 	return claims, nil
+}
+
+func GetBearerToken(authHeader string) (string, error) {
+	unique := len("Bearer ")
+	
+	if authHeader == "" {
+		return "", fmt.Errorf("unauthorized; authorization header is empty")
+	}
+
+	if len(authHeader) < unique || authHeader[:unique] != "Bearer " {
+		return "", fmt.Errorf("unauthorized; uthorization header is not a Bearer token")
+	}
+
+	return authHeader[unique:], nil
 }
