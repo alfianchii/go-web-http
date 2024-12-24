@@ -26,7 +26,7 @@ func main() {
 	db := config.DBConnect()
 	defer db.Close()
 	mongoClient := config.InitMongoDB()
-	defer mongoClient.Disconnect(context.Background())
+	defer mongoClient.Disconnect(config.CtxBg())
 	utils.InitCookie()
 
 	router := chi.NewRouter()

@@ -68,7 +68,7 @@ func GetChats() []Chat {
 	}
 
 	var chats []Chat
-	if err = cursor.All(context.Background(), &chats); err != nil {
+	if err = cursor.All(config.CtxBg(), &chats); err != nil {
 		log.Printf("Error decoding chats: %v\n", err)
 	}
 	

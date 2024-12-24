@@ -84,10 +84,10 @@ func InitMongoDB() *mongo.Client {
 }
 
 func CtxTime() (context.Context, context.CancelFunc) {
-	ctx, cancel := context.WithTimeout(CtxBacground(), ExecTimeoutDuration)
+	ctx, cancel := context.WithTimeout(CtxBg(), ExecTimeoutDuration)
 	return ctx, cancel
 }
 
-func CtxBacground() context.Context {
+func CtxBg() context.Context {
 	return context.Background()
 }
