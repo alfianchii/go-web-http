@@ -52,7 +52,6 @@
 - - GET (Chat w/ WebSocket)
 - - Header(s)
 - - - Cookie
-- - - Authorization: Bearer {token}
 -   http://localhost:3333/login
 - - POST (API)
 - - Param(s)
@@ -62,6 +61,12 @@
 - - POST (API)
 - - Header(s)
 - - - Cookie
+- - - Authorization: Bearer {token}
+-   http://localhost:3333/validate-jwt
+- - POST (API)
+- - Header(s)
+- - - Cookie
+- - - Authorization: Bearer {token}
 -   http://localhost:3333/about
 - - GET
 - - Header(s)
