@@ -32,8 +32,8 @@ func JWTMiddleware(next http.Handler) http.Handler {
 			return
 		}
 		
-		token, err := token.GetValidTokenFromUser(sessionUsername.(string))
-		validToken := token.Value
+		jwtToken, err := token.GetValidTokenFromUser(sessionUsername.(string))
+		validToken := jwtToken.Value
 		if err != nil {
 			utils.RemoveCookie(res, req, session)
 			http.Redirect(res, req, "/login", http.StatusSeeOther)

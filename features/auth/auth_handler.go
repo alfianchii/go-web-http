@@ -131,7 +131,7 @@ func LogoutHandler(res http.ResponseWriter, req *http.Request) {
 	}
 
 	if validToken != authHeader || validToken != sessionToken {
-		utils.SendResponse(res, "Unauthorized; invalid authorization token.", http.StatusUnauthorized, nil)
+		utils.SendResponse(res, "Unauthorized; looks like another device has accessing your account.", http.StatusUnauthorized, nil)
 		return
 	}
 
@@ -177,8 +177,9 @@ func ValidateJWTHandler(res http.ResponseWriter, req *http.Request) {
 	}
 
 	if validToken != authHeader || validToken != sessionToken {
-		invalidateUser(res, req, session)
-		utils.SendResponse(res, "Unauthorized; invalid authorization token.", http.StatusUnauthorized, nil)
+		userModel.SetUserOffline(sessionUsername)
+		utils.RemoveCookie(res, req, session)
+		utils.SendResponse(res, "Unauthorized; looks like another device has accessing your account.", http.StatusUnauthorized, nil)
 		return
 	}
 
