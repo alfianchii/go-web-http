@@ -1,14 +1,11 @@
 package token
 
 import (
-	"log"
+	"encoding/json"
+	"fmt"
 	"time"
 	"web-http/config"
-
-	"go.mongodb.org/mongo-driver/bson"
 )
-
-var collectionName string = "tokens"
 
 type Token struct {
 	Username string `bson:"username" json:"username"`
@@ -17,26 +14,28 @@ type Token struct {
 	CreatedAt time.Time `bson:"createdAt" json:"createdAt"`
 }
 
+var (
+	RedisSessionName = "session:"
+	RedisSessionBlacklist = "blacklist:"
+)
+
 func GetValidTokenFromUser(username string) (Token, error) {
-	var ctx, cancel = config.CtxTime()
+	var _, cancel = config.CtxTime()
 	defer cancel()
 
 	var token Token
-	filters := bson.M{
-		"username": username, 
-		"isBlacklist": false,
-	}
-	err := config.MongoDB.Collection(collectionName).FindOne(ctx, filters).Decode(&token)
+	sessionKey := RedisSessionName + username
+	tokenJSON, err := config.RedisClient.Get(config.CtxBg(), sessionKey).Result()
 	if err != nil {
-		log.Printf("Error getting token: %v\n", err)
-		return token, err
+		return token, fmt.Errorf("unauthorized; token was blacklisted")
 	}
+	_ = json.Unmarshal([]byte(tokenJSON), &token)
 
 	return token, nil
 }
 
 func CreateToken(username string, jwtToken string) (Token, error) {
-	var ctx, cancel = config.CtxTime()
+	var _, cancel = config.CtxTime()
 	defer cancel()
 
 	var token Token = Token{
@@ -45,28 +44,36 @@ func CreateToken(username string, jwtToken string) (Token, error) {
 		IsBlacklist: false,
 		CreatedAt: time.Now(),
 	}
-	
-	_, err := config.MongoDB.Collection(collectionName).InsertOne(ctx, token)
+
+	sessionKey := RedisSessionName + username
+	storedTokenJSON, _ := json.Marshal(token)
+	err := config.RedisClient.Set(config.CtxBg(), sessionKey, storedTokenJSON, config.TokenDuration).Err()
 	if err != nil {
-		log.Printf("Error inserting token: %v\n", err)
-		return token, err
+		return token, fmt.Errorf("unauthorized; error storing token")
 	}
 
 	return token, nil
 }
 
-func BlacklistUsedTokens(username string) error {
-	var ctx, cancel = config.CtxTime()
+func BlacklistUsedToken(username string) error {
+	var _, cancel = config.CtxTime()
 	defer cancel()
-
-	filters := bson.M{
-		"username": username,
-		"isBlacklist": false,
-	}
-	_, err := config.MongoDB.Collection("tokens").UpdateMany(ctx, filters, bson.M{"$set": bson.M{"isBlacklist": true}})
-	if err != nil {
-		log.Printf("Error blacklisting tokens: %v\n", err)
-		return err
+	
+	var sessionData Token
+	sessionKey := RedisSessionName + username
+	sessionDataJSON, _ := config.RedisClient.Get(config.CtxBg(), sessionKey).Result()
+	_ = json.Unmarshal([]byte(sessionDataJSON), &sessionData)
+	sessionData.IsBlacklist = true
+	
+	if sessionData.Value != "" {
+		config.RedisClient.Del(config.CtxBg(), sessionKey)
+		
+		storedDataJSON, _ := json.Marshal(sessionData)
+		sessionKey = RedisSessionBlacklist + sessionData.Value
+		err := config.RedisClient.Set(config.CtxBg(), sessionKey, storedDataJSON, config.TokenDuration).Err()
+		if err != nil {
+			return fmt.Errorf("unauthorized; error blacklisting token")
+		}
 	}
 
 	return nil

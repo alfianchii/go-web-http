@@ -74,9 +74,9 @@ func LoginHandler(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	err = tokenModel.BlacklistUsedTokens(creds.Username)
+	err = tokenModel.BlacklistUsedToken(creds.Username)
 	if err != nil {
-		utils.SendResponse(res, "Error blacklisting tokens", http.StatusInternalServerError, err)
+		utils.SendResponse(res, err.Error(), http.StatusInternalServerError, err)
 		return
 	}
 	
@@ -146,13 +146,13 @@ func ValidateJWTAndSession(res http.ResponseWriter, req *http.Request) (*ValidTo
 	validToken := token.Value
 	if err != nil {
 		invalidateUser(res, req)
-		return nil, fmt.Errorf("unauthorized; token was blacklisted")
+		return nil, err
 	}
 
-	if sessionToken != authHeader || sessionToken != validToken {
+	if sessionToken != authHeader {
 		userModel.SetUserOffline(sessionUsername)
 		utils.RemoveCookie(res, req, session)
-		return nil, fmt.Errorf("unauthorized; token is invalid")
+		return nil, fmt.Errorf("unauthorized; Authorization or Cookie token is invalid")
 	}
 
 	claims, err := utils.ValidateJWT(validToken)
@@ -170,7 +170,7 @@ func ValidateJWTAndSession(res http.ResponseWriter, req *http.Request) (*ValidTo
 	_, err = userModel.GetUserByUsername(claims.Username)
 	if err != nil {
 		invalidateUser(res, req)
-		return nil, fmt.Errorf("unauthorized; user not found")
+		return nil, err
 	}
 
 	var response = &ValidTokenResponse{
@@ -187,5 +187,5 @@ func invalidateUser(res http.ResponseWriter, req *http.Request) {
 	
 	userModel.SetUserOffline(username)
 	utils.RemoveCookie(res, req, session)
-	tokenModel.BlacklistUsedTokens(username)
+	tokenModel.BlacklistUsedToken(username)
 }

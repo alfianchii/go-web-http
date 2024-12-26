@@ -1,6 +1,7 @@
 package user
 
 import (
+	"fmt"
 	"net/http"
 	"time"
 	"web-http/config"
@@ -57,7 +58,7 @@ func GetUserByUsername(username string) (User, error) {
 	var user User
 	err := config.MongoDB.Collection(collectionName).FindOne(ctx, bson.M{"username": username}).Decode(&user)
 	if err != nil {
-		return user, err
+		return user, fmt.Errorf("unauthorized; user not found")
 	}
 
 	return user, nil
