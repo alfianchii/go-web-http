@@ -150,7 +150,8 @@ func ValidateJWTAndSession(res http.ResponseWriter, req *http.Request) (*ValidTo
 	}
 
 	if sessionToken != authHeader || sessionToken != validToken {
-		invalidateUser(res, req)
+		userModel.SetUserOffline(sessionUsername)
+		utils.RemoveCookie(res, req, session)
 		return nil, fmt.Errorf("unauthorized; token is invalid")
 	}
 
