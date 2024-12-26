@@ -1,6 +1,7 @@
 package auth
 
 import (
+	"fmt"
 	"html/template"
 	"net/http"
 	"time"
@@ -9,8 +10,6 @@ import (
 	tokenModel "web-http/features/token"
 	userModel "web-http/features/user"
 	"web-http/utils"
-
-	"github.com/gorilla/sessions"
 )
 
 func RegisterViewHandler(res http.ResponseWriter, req *http.Request) {
@@ -102,110 +101,87 @@ func LoginHandler(res http.ResponseWriter, req *http.Request) {
 }
 
 func LogoutHandler(res http.ResponseWriter, req *http.Request) {
+	token, err := ValidateJWTAndSession(res, req)
+	if err != nil {
+		utils.SendResponse(res, err.Error(), http.StatusUnauthorized, nil)
+		return
+	}
+
+	invalidateUser(res, req)
+	
+	utils.SendResponse(res, "You are logged out", http.StatusOK, token)
+}
+
+func ValidateJWTHandler(res http.ResponseWriter, req *http.Request) {
+	token, err := ValidateJWTAndSession(res, req)
+	if err != nil {
+		utils.SendResponse(res, err.Error(), http.StatusUnauthorized, nil)
+		return
+	}
+
+	utils.SendResponse(res, "Valid token", http.StatusOK, token)
+}
+
+func ValidateJWTAndSession(res http.ResponseWriter, req *http.Request) (*ValidTokenResponse, error) {
 	session, err := utils.Store.Get(req, config.GetENV("COOKIE_NAME"))
 	if err != nil {
-		utils.SendResponse(res, "Unauthorized; session is missing.", http.StatusUnauthorized, nil)
-		return
+		return nil, fmt.Errorf("unauthorized; session is missing")
 	}
 
 	sessionExp, ok := session.Values["exp"].(int64)
 	if !ok || time.Now().Unix() > sessionExp {
-		utils.SendResponse(res, "Unauthorized; session expired.", http.StatusUnauthorized, nil)
-		return
+		invalidateUser(res, req)
+		return nil, fmt.Errorf("unauthorized; session expired")
 	}
 
 	sessionUsername := session.Values["username"].(string)
 	sessionToken := session.Values["token"]
-
+	
 	authHeader, err := utils.GetBearerToken(req.Header.Get("Authorization"))
 	if err != nil {
-		utils.SendResponse(res, utils.CapitalizeFirstLetter(err.Error()), http.StatusUnauthorized, nil)
-		return
+		return nil, err
 	}
 
 	token, err := tokenModel.GetValidTokenFromUser(sessionUsername)
 	validToken := token.Value
 	if err != nil {
-		utils.SendResponse(res, "Unauthorized; token was blacklisted.", http.StatusUnauthorized, nil)
-		return
+		invalidateUser(res, req)
+		return nil, fmt.Errorf("unauthorized; token was blacklisted")
 	}
 
-	if validToken != authHeader || validToken != sessionToken {
-		utils.SendResponse(res, "Unauthorized; looks like another device has accessing your account.", http.StatusUnauthorized, nil)
-		return
+	if sessionToken != authHeader || sessionToken != validToken {
+		invalidateUser(res, req)
+		return nil, fmt.Errorf("unauthorized; token is invalid")
 	}
 
 	claims, err := utils.ValidateJWT(validToken)
 	if err != nil {
-		utils.SendResponse(res, "Unauthorized; token was expired.", http.StatusUnauthorized, nil)
-		return
-	}
-
-	invalidateUser(res, req, session)
-	
-	utils.SendResponse(res, "You are logged out", http.StatusOK, claims)
-}
-
-func ValidateJWTHandler(res http.ResponseWriter, req *http.Request) {
-	session, err := utils.Store.Get(req, config.GetENV("COOKIE_NAME"))
-	if err != nil {
-		utils.SendResponse(res, "Unauthorized; session is missing.", http.StatusUnauthorized, nil)
-		return
-	}
-
-	sessionExp, ok := session.Values["exp"].(int64)
-	if !ok || time.Now().Unix() > sessionExp {
-		invalidateUser(res, req, session)
-		utils.SendResponse(res, "Unauthorized; session expired.", http.StatusUnauthorized, nil)
-		return
-	}
-
-	sessionUsername := session.Values["username"].(string)
-	sessionToken := session.Values["token"]
-	
-	authHeader, err := utils.GetBearerToken(req.Header.Get("Authorization"))
-	if err != nil {
-		utils.SendResponse(res, utils.CapitalizeFirstLetter(err.Error()), http.StatusUnauthorized, nil)
-		return
-	}
-
-	token, err := tokenModel.GetValidTokenFromUser(sessionUsername)
-	validToken := token.Value
-	if err != nil {
-		utils.SendResponse(res, "Unauthorized; token was blacklisted.", http.StatusUnauthorized, nil)
-		return
+		invalidateUser(res, req)
+		return nil, fmt.Errorf("unauthorized; token was expired")
 	}
 
 	if validToken != authHeader || validToken != sessionToken {
 		userModel.SetUserOffline(sessionUsername)
 		utils.RemoveCookie(res, req, session)
-		utils.SendResponse(res, "Unauthorized; looks like another device has accessing your account.", http.StatusUnauthorized, nil)
-		return
-	}
-
-	claims, err := utils.ValidateJWT(validToken)
-	if err != nil {
-		invalidateUser(res, req, session)
-		utils.SendResponse(res, "Unauthorized; token was expired.", http.StatusUnauthorized, nil)
-		return
+		return nil, fmt.Errorf("unauthorized; looks like another device has accessing your account")
 	}
 
 	_, err = userModel.GetUserByUsername(claims.Username)
 	if err != nil {
-		invalidateUser(res, req, session)
-		utils.SendResponse(res, "Unauthorized; user not found.", http.StatusUnauthorized, nil)
-		return
+		invalidateUser(res, req)
+		return nil, fmt.Errorf("unauthorized; user not found")
 	}
 
-	var response ValidTokenResponse = ValidTokenResponse{
+	var response = &ValidTokenResponse{
 		Username: claims.Username,
 		Token: validToken,
 		Exp: claims.ExpiresAt.Time.Unix(),
 	}
-	utils.SendResponse(res, "Valid token", http.StatusOK, response)
+	return response, nil
 }
 
-func invalidateUser(res http.ResponseWriter, req *http.Request, session *sessions.Session) {
+func invalidateUser(res http.ResponseWriter, req *http.Request) {
+	session, _ := utils.Store.Get(req, config.GetENV("COOKIE_NAME"))
 	username := session.Values["username"].(string)
 	
 	userModel.SetUserOffline(username)
