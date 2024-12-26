@@ -27,6 +27,8 @@ func main() {
 	mongoClient := config.InitMongoDB()
 	defer mongoClient.Disconnect(config.CtxBg())
 	utils.InitCookie()
+	config.InitRedis()
+	defer config.RedisClient.Close()
 
 	router := chi.NewRouter()
 

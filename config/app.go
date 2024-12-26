@@ -9,6 +9,7 @@ import (
 	"github.com/jmoiron/sqlx"
 	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
+	"github.com/redis/go-redis/v9"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -19,6 +20,7 @@ var (
 	MongoDB *mongo.Database
 	ExecTimeoutDuration = 10*time.Second
 	TokenDuration = 1*time.Hour
+	RedisClient *redis.Client
 )
 
 func InitENV() {
@@ -90,4 +92,21 @@ func CtxTime() (context.Context, context.CancelFunc) {
 
 func CtxBg() context.Context {
 	return context.Background()
+}
+
+func InitRedis() *redis.Client {
+	RedisClient = redis.NewClient(&redis.Options{
+		Addr: GetENV("REDIS_HOST") + ":" + GetENV("REDIS_PORT"),
+		Username: GetENV("REDIS_USERNAME"),
+		Password: GetENV("REDIS_PASSWORD"),
+		DB: 0,
+	})
+
+	_, err := RedisClient.Ping(CtxBg()).Result()
+	if err != nil {
+		log.Fatalf("Error connecting to Redis: %v", err)
+	}
+
+	fmt.Println("Successfully connected to the Redis!")
+	return RedisClient
 }
