@@ -124,7 +124,7 @@ func ValidateJWTHandler(res http.ResponseWriter, req *http.Request) {
 
 func ValidateJWTAndSession(res http.ResponseWriter, req *http.Request) (*ValidTokenResponse, error) {
 	session, err := utils.Store.Get(req, config.GetENV("COOKIE_NAME"))
-	if err != nil {
+	if err != nil || len(session.Values) == 0 {
 		return nil, fmt.Errorf("unauthorized; session is missing")
 	}
 
