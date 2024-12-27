@@ -22,6 +22,7 @@
 -   [godotenv](https://github.com/joho/godotenv)
 -   [mongodb](https://github.com/mongodb/mongo-go-driver)
 -   [Auth w/ JWT](https://github.com/golang-jwt/jwt)
+-   [Redis](https://github.com/redis/go-redis)
 
 <h2 id="routes">👤 ルート</h2>
 
@@ -104,6 +105,8 @@ DB_PASSWORD=your-password
 MONGODB_DATABASE=goWebHttp
 MONGODB_USERNAME=your-username
 MONGODB_PASSWORD=your-password
+REDIS_USERNAME=your-username
+REDIS_PASSWORD=your-password
 ```
 
 3. ローカルに、[golang-migrate](https://github.com/golang-migrate/migrate)をインストールして、migrationを実行する
