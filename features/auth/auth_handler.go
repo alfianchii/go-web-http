@@ -86,11 +86,17 @@ func LoginHandler(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	session, _ := utils.Store.Get(req, config.GetENV("COOKIE_NAME"))
+	session, _ := utils.Store.Get(req, utils.SessionName)
 	session.Values["username"] = storedToken.Username
 	session.Values["token"] = storedToken.Value
 	session.Values["exp"] = time.Now().Add(config.TokenDuration).Unix()
 	session.Save(req, res)
+
+	http.SetCookie(res, &http.Cookie{
+			Name:  utils.SessionTokenName,
+			Value: storedToken.Value,
+			Path:  "/",
+	})
 
 	userModel.SetUserOnline(storedToken.Username)
 
@@ -123,7 +129,7 @@ func ValidateJWTHandler(res http.ResponseWriter, req *http.Request) {
 }
 
 func ValidateJWTAndSession(res http.ResponseWriter, req *http.Request) (*ValidTokenResponse, error) {
-	session, err := utils.Store.Get(req, config.GetENV("COOKIE_NAME"))
+	session, err := utils.Store.Get(req, utils.SessionName)
 	if err != nil || len(session.Values) == 0 {
 		return nil, fmt.Errorf("unauthorized; session is missing")
 	}
@@ -151,7 +157,7 @@ func ValidateJWTAndSession(res http.ResponseWriter, req *http.Request) (*ValidTo
 
 	if sessionToken != authHeader {
 		userModel.SetUserOffline(sessionUsername)
-		utils.RemoveCookie(res, req, session)
+		removeSessionAndToken(res, req)
 		return nil, fmt.Errorf("unauthorized; Authorization or Cookie token is invalid")
 	}
 
@@ -163,7 +169,7 @@ func ValidateJWTAndSession(res http.ResponseWriter, req *http.Request) (*ValidTo
 
 	if validToken != authHeader || validToken != sessionToken {
 		userModel.SetUserOffline(sessionUsername)
-		utils.RemoveCookie(res, req, session)
+		removeSessionAndToken(res, req)
 		return nil, fmt.Errorf("unauthorized; looks like another device has accessing your account")
 	}
 
@@ -182,10 +188,18 @@ func ValidateJWTAndSession(res http.ResponseWriter, req *http.Request) (*ValidTo
 }
 
 func invalidateUser(res http.ResponseWriter, req *http.Request) {
-	session, _ := utils.Store.Get(req, config.GetENV("COOKIE_NAME"))
+	session, _ := utils.Store.Get(req, utils.SessionName)
 	username := session.Values["username"].(string)
 	
 	userModel.SetUserOffline(username)
-	utils.RemoveCookie(res, req, session)
+	removeSessionAndToken(res, req)
 	tokenModel.BlacklistUsedToken(username)
+}
+
+func removeSessionAndToken(res http.ResponseWriter, req *http.Request) {
+	session, _ := utils.Store.Get(req, utils.SessionName)
+	utils.RemoveCookie(res, req, session)
+
+	sessionToken, _ := utils.Store.Get(req, utils.SessionTokenName)
+	utils.RemoveCookie(res, req, sessionToken)
 }

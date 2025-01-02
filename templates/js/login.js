@@ -27,7 +27,6 @@ const loginHandler = async () => {
   if (token) {
     try {
       await validateJWT(token);
-      sessionStorage.setItem('token', token);
       window.location.href = '/';
     } catch (error) {
       console.error(error);

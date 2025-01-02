@@ -1,4 +1,5 @@
-import { logout } from "./auth.js"
+import { logout, getCookie } from "./auth.js"
+import { JWT_TOKEN } from "./const.js"
 
 export const validateJWT = async (token = getToken()) => {
   try {
@@ -19,10 +20,9 @@ export const validateJWT = async (token = getToken()) => {
 }
 
 export const invalidateSession = async (error) => {
-  sessionStorage.removeItem("token");
   await logout(getToken());
   window.location.href = "/login";
   console.error(error);
 };
 
-export const getToken = () => sessionStorage.getItem('token');
+export const getToken = () => getCookie(JWT_TOKEN);

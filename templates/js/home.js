@@ -1,4 +1,4 @@
-import { logout } from "./utils/auth.js";
+import { logout, getCookie } from "./utils/auth.js";
 import { getToken, invalidateSession } from "./utils/token.js";
 import { validateJWT } from "./utils/token.js";
 
