@@ -3,7 +3,6 @@ package basic
 import (
 	"html/template"
 	"net/http"
-	"web-http/config"
 	"web-http/dto"
 	"web-http/utils"
 
@@ -40,7 +39,7 @@ func HomeHandler(res http.ResponseWriter, req *http.Request) {
 }
 
 func AboutHandler(res http.ResponseWriter, req *http.Request) {
-	session, _ := utils.Store.Get(req, config.GetENV("COOKIE_NAME"))
+	session, _ := utils.Store.Get(req, utils.SessionName)
 	username := session.Values["username"].(string)
 
 	utils.SendResponse(res, "Welcome to the About page, " + username, http.StatusOK, nil)

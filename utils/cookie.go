@@ -10,6 +10,8 @@ import (
 var (
 	key = []byte("super-secret-key")
 	Store = sessions.NewCookieStore(key)
+	SessionName = config.GetENV("COOKIE_NAME")
+	SessionTokenName = SessionName + "-token"
 )
 
 func InitCookie() {

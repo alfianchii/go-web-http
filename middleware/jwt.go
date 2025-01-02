@@ -3,14 +3,13 @@ package middleware
 import (
 	"net/http"
 	"time"
-	"web-http/config"
 	"web-http/features/token"
 	"web-http/utils"
 )
 
 func JWTMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
-		session, err := utils.Store.Get(req, config.GetENV("COOKIE_NAME"))
+		session, err := utils.Store.Get(req, utils.SessionName)
 		if err != nil || len(session.Values) == 0 {
 			http.Redirect(res, req, "/login", http.StatusSeeOther)
 			return
