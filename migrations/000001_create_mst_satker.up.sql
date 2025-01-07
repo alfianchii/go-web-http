@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS mst_satker (
+CREATE TABLE IF NOT EXISTS master_satker (
   satker_id SERIAL PRIMARY KEY,
   satker VARCHAR(255) NOT NULL,
   singkatan VARCHAR(255),

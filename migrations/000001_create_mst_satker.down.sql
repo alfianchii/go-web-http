@@ -1,1 +1,1 @@
-DROP TABLE IF EXISTS mst_satker;
+DROP TABLE IF EXISTS master_satker;
