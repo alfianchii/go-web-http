@@ -1,0 +1,78 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: ./docker/go.dockerfile
+    container_name: go-web-app
+    ports:
+      - "${APP_PORT}:${APP_PORT}"
+    volumes:
+      - .:/app
+    env_file:
+      - .env
+    depends_on:
+      - redis
+      - mongo
+      - postgres
+    networks:
+      - app-network
+  
+  postgres:
+    image: postgres:14
+    container_name: postgres-db
+    ports:
+      - "${DB_PORT}:${DB_PORT}"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    env_file:
+      - .env
+    environment:
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_DATABASE}
+      POSTGRES_HOST_AUTH_METHOD: trust
+    networks:
+      - app-network
+  
+  mongo:
+    image: mongo:5
+    container_name: mongo-db
+    ports:
+      - "${MONGODB_PORT}:${MONGODB_PORT}"
+    volumes:
+      - mongo-data:/data/db
+    env_file:
+      - .env
+    environment:
+      MONGO_INITDB_DATABASE: ${MONGODB_DATABASE}
+      MONGO_INITDB_ROOT_USERNAME: ${MONGODB_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGODB_PASSWORD}
+    networks:
+      - app-network
+      
+  redis:
+    image: redis:7.4.1
+    container_name: redis-cache
+    ports:
+      - "${REDIS_PORT}:${REDIS_PORT}"
+    volumes: 
+      - ./docker/redis/redis.conf:/usr/local/etc/redis/redis.conf
+      - ./docker/redis/users.acl:/usr/local/etc/redis/users.acl
+      - redis-cache:/data
+    env_file:
+      - .env
+    entrypoint: redis-server /usr/local/etc/redis/redis.conf
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  postgres-data:
+    driver: local
+  mongo-data:
+    driver: local
+  redis-cache:
+    driver: local

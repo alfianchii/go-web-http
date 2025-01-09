@@ -27,3 +27,6 @@
 go.sum
 
 .env
+
+main
+dump.rdb
