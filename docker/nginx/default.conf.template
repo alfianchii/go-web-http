@@ -5,7 +5,7 @@ server {
 }
 
 server {
-    listen 443 ssl;
+    listen ${APP_NGINX_HTTPS_PORT} ssl;
     server_name ${APP_URL};
 
     ssl_certificate /etc/nginx/certs/fullchain.pem;
