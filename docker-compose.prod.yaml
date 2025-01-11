@@ -55,7 +55,7 @@ services:
       - app-network
   
   mongo:
-    image: mongo:5
+    image: mongo:8.0.4
     container_name: mongo-db
     ports:
       - "${MONGODB_PORT}:${MONGODB_PORT}"
