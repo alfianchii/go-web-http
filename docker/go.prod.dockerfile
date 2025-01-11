@@ -4,6 +4,7 @@ RUN apk add --no-cache git gettext
 
 WORKDIR /app
 
+COPY go.mod .
 RUN go mod tidy && go mod verify
 
 COPY . .
