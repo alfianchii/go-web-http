@@ -1,5 +1,5 @@
 server {
-    listen 80;
+    listen ${APP_NGINX_PORT};
     server_name ${APP_URL};
     return 301 https://$host$request_uri; # Set HTTPS
 }
