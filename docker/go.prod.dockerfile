@@ -4,8 +4,7 @@ RUN apk add --no-cache git gettext
 
 WORKDIR /app
 
-COPY go.mod go.sum ./
-RUN go mod download
+RUN go mod tidy && go mod verify
 
 COPY . .
 
