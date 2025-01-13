@@ -130,6 +130,39 @@ go run .
 air # Run with Air
 ```
 
+<h3 id="develop-with-docker">🐳 Develop w/ Docker</h3>
+
+-   Clone the repository:
+
+```bash
+git clone https://github.com/alfianchii/go-web-http
+cd go-web-http
+```
+
+-   Copy `.env.example` file with `cp .env.example .env` and configure database:
+
+```conf
+DB_DATABASE=go_web_http
+DB_USERNAME=gowebhttp
+DB_PASSWORD=gowebhttp1@1
+
+MONGODB_DATABASE=goWebHttp
+MONGODB_USERNAME=gowebhttp
+MONGODB_PASSWORD=gowebhttp1@1
+
+REDIS_USERNAME=gowebhttp
+REDIS_PASSWORD=gowebhttp1@1
+```
+
+-   Make sure you have Docker Compose installed and run:
+
+```bash
+docker compose up --build -d
+```
+
+-   Pages
+-   -   App: `http://0.0.0.0:3333`
+
 <h2 id="support">💌 Support me</h2>
 
 <p>You can support me on the Trakteer platform! Your support will be very meaningful. Like, just giving a star to this project is already greatly appreciated~!</p>
