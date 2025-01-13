@@ -2,7 +2,7 @@ services:
   app:
     build:
       context: .
-      dockerfile: ./docker/go.prod.dockerfile
+      dockerfile: ./docker/go.dockerfile
     container_name: go-web-app
     ports:
       - "${APP_PORT}:${APP_PORT}"
