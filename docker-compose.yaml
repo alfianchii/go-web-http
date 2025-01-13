@@ -10,6 +10,8 @@ services:
       - .:/app
     env_file:
       - .env
+    environment:
+      - APP_ENV=development
     depends_on:
       - redis
       - mongo
