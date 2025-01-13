@@ -15,7 +15,7 @@ import (
 )
 
 var (
-	Address = fmt.Sprintf(":%s", GetENV("APP_PORT"))
+	Address = fmt.Sprintf("%s:%s", GetENV("APP_URL"), GetENV("APP_PORT"))
 	MongoClient *mongo.Client
 	MongoDB *mongo.Database
 	ExecTimeoutDuration = 10*time.Second
