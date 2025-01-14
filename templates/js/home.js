@@ -27,7 +27,8 @@ const initDOMElements = () => ({
 });
 
 const setupSocket = ({ inputEl, buttonEl, notifEl, chatListEl }) => {
-  const ws = new WebSocket(`ws://${document.location.host}/chats`);
+  const wsProtocol = window.location.protocol === 'https:' ? 'wss://' : 'ws://';
+  const ws = new WebSocket(`${wsProtocol}${document.location.host}/chats`);
 
   if (!window.WebSocket) return notifEl.innerText = "WebSocket is not supported by your browser.";
   
