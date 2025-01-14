@@ -1,6 +1,5 @@
 const registerFormEl = document.getElementById('register-form');
 const usernameEl = document.getElementById('username');
-const emailEl = document.getElementById('email');
 const passwordEl = document.getElementById('password');
 const registerEl = document.getElementById('register');
 const notifEl = document.getElementById('notification');
@@ -8,7 +7,6 @@ const notifEl = document.getElementById('notification');
 const registerHandler = async () => {
   const body = new FormData();
   body.append('username', usernameEl.value);
-  body.append('email', emailEl.value);
   body.append('password', passwordEl.value);
 
   const response = await fetch('/user', {

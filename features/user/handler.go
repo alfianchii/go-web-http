@@ -14,13 +14,12 @@ func CreateUserHandler(res http.ResponseWriter, req *http.Request) {
 		UserId: ksuid.New().String(),
 		Username: req.FormValue("username"),
 		Password: req.FormValue("password"),
-		Email: req.FormValue("email"),
 		IsOnline: false,
 		CreatedAt: time.Now(),
 	}
 
-	if user.Username == "" || user.Password == "" || user.Email == "" {
-		utils.SendResponse(res, "Please provide a username, password, and email", http.StatusBadRequest, nil)
+	if user.Username == "" || user.Password == "" {
+		utils.SendResponse(res, "Please provide a username and password", http.StatusBadRequest, nil)
 		return
 	}
 
@@ -29,13 +28,7 @@ func CreateUserHandler(res http.ResponseWriter, req *http.Request) {
 		utils.SendResponse(res, "Username already exists", http.StatusBadRequest, nil)
 		return
 	}
-	
-	existEmail := IsEmailExist(user.Email)
-	if existEmail {
-		utils.SendResponse(res, "Email already exists", http.StatusBadRequest, nil)
-		return
-	}
-	
+
 	hashedPassword, _ := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
 	user.Password = string(hashedPassword)
 
