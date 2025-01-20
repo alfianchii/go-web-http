@@ -120,7 +120,7 @@ GOBIN=$(pwd)/bin go install -tags 'postgres' github.com/golang-migrate/migrate/v
 ```
 - For example:
 ```bash
-./bin/migrate create -ext sql -dir migrations -seq create_mst_satker
+./bin/migrate create -ext sql -dir migrations -seq create_master_satker
 ```
 
 4. Launch the app
@@ -142,14 +142,17 @@ cd go-web-http
 -   Copy `.env.example` file with `cp .env.example .env` and configure database:
 
 ```conf
+DB_HOST=postgres
 DB_DATABASE=go_web_http
 DB_USERNAME=gowebhttp
 DB_PASSWORD=gowebhttp1@1
 
+MONGODB_HOST=mongo
 MONGODB_DATABASE=goWebHttp
 MONGODB_USERNAME=gowebhttp
 MONGODB_PASSWORD=gowebhttp1@1
 
+REDIS_HOST=redis
 REDIS_USERNAME=gowebhttp
 REDIS_PASSWORD=gowebhttp1@1
 ```
@@ -162,6 +165,122 @@ docker compose up --build -d
 
 -   Pages
 -   -   App: `http://0.0.0.0:3333`
+
+<h4 id="docker-commands">🔐 Commands</h4>
+
+-   Go
+-   -   `docker compose exec app sh`
+-   -   `docker compose exec app go mod tidy`
+-   -   `docker compose exec app go get <deps>`
+-   -   `docker compose exec app go install <deps>`
+-   -   `docker compose exec app go build -o main .`
+-   -   Etc
+
+-   Redis
+-   -   `docker compose exec redis bash`
+-   -   `docker compose exec redis redis-cli`
+-   -   Etc
+
+-   Mongo
+-   -   `docker compose exec mongo bash`
+-   -   `docker compose exec mongo mongosh -u gowebhttp -p gowebhttp1@1`
+-   -   Etc
+
+-   Postgres
+-   -   `docker compose exec postgres bash`
+-   -   `docker compose exec postgres psql -U gowebhttp -d go_web_http`
+-   -   Etc
+
+<h2 id="production">🌐 Production</h2>
+
+<h3 id="deployment-docker-vps">🐳 Deployment w/ Docker (use Virtual Private Server)</h3>
+
+-   Clone the repository w/ SSH method `git clone git@github.com:alfianchii/go-web-http` and go to the directory with `cd go-web-http` command.
+
+-   Copy `.env.example` file to `.env` and do configs.
+
+```conf
+DB_HOST=postgres
+DB_DATABASE=go_web_http
+DB_USERNAME=your-vps-username
+DB_PASSWORD=your-vps-password
+
+MONGODB_HOST=mongo
+MONGODB_DATABASE=goWebHttp
+MONGODB_USERNAME=your-vps-username
+MONGODB_PASSWORD=your-vps-password
+
+REDIS_HOST=redis
+REDIS_USERNAME=your-vps-username
+REDIS_PASSWORD=your-vps-password
+```
+
+-   Make sure on your VPS you have Docker Compose installed and run:
+
+```bash
+docker compose -f ./docker-compose.prod.yaml up -d --build
+```
+
+- Setup your domain and SSL certificate with Nginx configuration:
+
+```nginx
+server {
+  server_name your-domain.com www.your-domain.com;
+
+  location / {
+    proxy_pass http://127.0.0.1:3333;
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+  }
+
+  location /chats {
+    proxy_pass http://127.0.0.1:3333;
+    proxy_http_version 1.1;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection "upgrade";
+    proxy_set_header Host $host;
+  }
+
+  error_log /var/log/nginx/my-domain_error.log;
+  access_log /var/log/nginx/my-domain_access.log;
+}
+```
+
+- Setup SSL certificate with Certbot:
+
+```bash
+sudo apt install certbot python3-certbot-nginx
+sudo certbot --nginx -d my-domain.com -d www.my-domain.com
+sudo ln -s /etc/nginx/sites-available/my-domain.com /etc/nginx/sites-enabled/
+sudo systemctl reload nginx
+```
+
+<h4 id="docker-commands">🔐 Commands</h4>
+
+-   Go
+-   -   `docker compose -f ./docker-compose.prod.yaml exec app sh`
+-   -   `docker compose -f ./docker-compose.prod.yaml exec app go mod tidy`
+-   -   `docker compose -f ./docker-compose.prod.yaml exec app go get <deps>`
+-   -   `docker compose -f ./docker-compose.prod.yaml exec app go install <deps>`
+-   -   `docker compose -f ./docker-compose.prod.yaml exec app go build -o main .`
+-   -   Etc
+
+-   Redis
+-   -   `docker compose -f ./docker-compose.prod.yaml exec redis bash`
+-   -   `docker compose -f ./docker-compose.prod.yaml exec redis redis-cli`
+-   -   Etc
+
+-   Mongo
+-   -   `docker compose -f ./docker-compose.prod.yaml exec mongo bash`
+-   -   `docker compose -f ./docker-compose.prod.yaml exec mongo mongosh -u gowebhttp -p gowebhttp1@1`
+-   -   Etc
+
+-   Postgres
+-   -   `docker compose -f ./docker-compose.prod.yaml exec postgres bash`
+-   -   `docker compose -f ./docker-compose.prod.yaml exec postgres psql -U gowebhttp -d go_web_http`
+-   -   Etc
 
 <h2 id="support">💌 Support me</h2>
 
