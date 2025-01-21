@@ -97,7 +97,7 @@ go mod verify
 cp .env.example .env
 ```
 
-2. `.env`ファイルを通じてDatabaseを設定する
+2. `.env`ファイルを通じてdatabaseを設定する
 ```bash
 DB_DATABASE=go_web_http
 DB_USERNAME=your-username
@@ -117,7 +117,7 @@ GOBIN=$(pwd)/bin go install -tags 'postgres' github.com/golang-migrate/migrate/v
 ./bin/migrate -database "postgres://your-username:your-password@127.0.0.1:5432/go_web_http?sslmode=disable" -path ./migrations down
 ```
 
-- さらに、自分でmigrationsを作成したい場合は、次のcommandを使用できます:
+- さらに、自分でmigrationsを作成したい場合は、次のcommandを使用できます：
 ```bash
 ./bin/migrate create -ext sql -dir migrations -seq create_<table_name>
 ```
@@ -132,6 +132,159 @@ go run .
 # OR
 air # Airと実行する
 ```
+
+<h3 id="develop-with-docker">🐳 Dockerで開発する</h3>
+
+-   Repositoryをクローンする:
+
+```bash
+git clone https://github.com/alfianchii/go-web-http
+cd go-web-http
+co .env.example .env
+```
+
+-  `.env`ファイルを通じてcore depsを設定する：
+
+```conf
+DB_HOST=postgres
+DB_DATABASE=go_web_http
+DB_USERNAME=gowebhttp
+DB_PASSWORD=gowebhttp1@1
+
+MONGODB_HOST=mongo
+MONGODB_DATABASE=goWebHttp
+MONGODB_USERNAME=gowebhttp
+MONGODB_PASSWORD=gowebhttp1@1
+
+REDIS_HOST=redis
+REDIS_USERNAME=gowebhttp
+REDIS_PASSWORD=gowebhttp1@1
+```
+
+-   Docker Composeがインストールされてるか確認してね。それから、このcommandを実行してみて：
+
+```bash
+docker compose up --build -d
+```
+
+-   Pages
+-   -   App: `http://0.0.0.0:3333`
+
+<h4 id="docker-commands">🔐 Commands</h4>
+
+-   Go
+-   -   `docker compose exec app sh`
+-   -   `docker compose exec app go mod tidy`
+-   -   `docker compose exec app go get <deps>`
+-   -   `docker compose exec app go install <deps>`
+-   -   `docker compose exec app go build -o main .`
+-   -   Etc
+
+-   Redis
+-   -   `docker compose exec redis bash`
+-   -   `docker compose exec redis redis-cli`
+-   -   Etc
+
+-   Mongo
+-   -   `docker compose exec mongo bash`
+-   -   `docker compose exec mongo mongosh -u gowebhttp -p gowebhttp1@1`
+-   -   Etc
+
+-   Postgres
+-   -   `docker compose exec postgres bash`
+-   -   `docker compose exec postgres psql -U gowebhttp -d go_web_http`
+-   -   Etc
+
+<h2 id="production">🌐 本番環境</h2>
+
+<h3 id="deployment-docker-vps">🐳 Dockerを使ってデプロイするよ (Virtual Private Serverを使う感じで!)</h3>
+
+-   リポジトリをSSHでクローンしてみて！`git clone git@github.com:alfianchii/go-web-http`って打てばOKだよ。それから、`cd go-web-http`でディレクトリに移動してね！
+
+-   `.env.example`ファイルをコピーして`.env`にしてね！それから設定をいじってみて：
+
+```conf
+DB_HOST=postgres
+DB_DATABASE=go_web_http
+DB_USERNAME=your-vps-username
+DB_PASSWORD=your-vps-password
+
+MONGODB_HOST=mongo
+MONGODB_DATABASE=goWebHttp
+MONGODB_USERNAME=your-vps-username
+MONGODB_PASSWORD=your-vps-password
+
+REDIS_HOST=redis
+REDIS_USERNAME=your-vps-username
+REDIS_PASSWORD=your-vps-password
+```
+
+-   VPSにDocker Composeがインストールされてることを確認してね。それから、このcommandを実行してみて：
+
+```bash
+docker compose -f ./docker-compose.prod.yaml up -d --build
+```
+
+- ドメインとSSL証明書を設定して、Nginxの設定をするよ：
+
+```nginx
+server {
+  server_name your-domain.com www.your-domain.com;
+
+  location / {
+    proxy_pass http://127.0.0.1:3333;
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+  }
+
+  location /chats {
+    proxy_pass http://127.0.0.1:3333;
+    proxy_http_version 1.1;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection "upgrade";
+    proxy_set_header Host $host;
+  }
+
+  error_log /var/log/nginx/my-domain_error.log;
+  access_log /var/log/nginx/my-domain_access.log;
+}
+```
+
+- Certbotを使ってSSL証明書を設定しよう！コマンドはこれ：
+
+```bash
+sudo apt install certbot python3-certbot-nginx
+sudo certbot --nginx -d my-domain.com -d www.my-domain.com
+sudo ln -s /etc/nginx/sites-available/my-domain.com /etc/nginx/sites-enabled/
+sudo systemctl reload nginx
+```
+
+<h4 id="docker-commands">🔐 Commands</h4>
+
+-   Go
+-   -   `docker compose -f ./docker-compose.prod.yaml exec app sh`
+-   -   `docker compose -f ./docker-compose.prod.yaml exec app go mod tidy`
+-   -   `docker compose -f ./docker-compose.prod.yaml exec app go get <deps>`
+-   -   `docker compose -f ./docker-compose.prod.yaml exec app go install <deps>`
+-   -   `docker compose -f ./docker-compose.prod.yaml exec app go build -o main .`
+-   -   Etc
+
+-   Redis
+-   -   `docker compose -f ./docker-compose.prod.yaml exec redis bash`
+-   -   `docker compose -f ./docker-compose.prod.yaml exec redis redis-cli`
+-   -   Etc
+
+-   Mongo
+-   -   `docker compose -f ./docker-compose.prod.yaml exec mongo bash`
+-   -   `docker compose -f ./docker-compose.prod.yaml exec mongo mongosh -u gowebhttp -p gowebhttp1@1`
+-   -   Etc
+
+-   Postgres
+-   -   `docker compose -f ./docker-compose.prod.yaml exec postgres bash`
+-   -   `docker compose -f ./docker-compose.prod.yaml exec postgres psql -U gowebhttp -d go_web_http`
+-   -   Etc
 
 <h2 id="support">💌 応援してね</h2>
 
