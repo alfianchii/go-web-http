@@ -123,7 +123,7 @@ GOBIN=$(pwd)/bin go install -tags 'postgres' github.com/golang-migrate/migrate/v
 ```
 - 例えば：
 ```bash
-./bin/migrate create -ext sql -dir migrations -seq create_mst_satker
+./bin/migrate create -ext sql -dir migrations -seq create_master_satker
 ```
 
 4. Appを起動する
