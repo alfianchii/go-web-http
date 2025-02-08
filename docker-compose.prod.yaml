@@ -22,8 +22,6 @@ services:
   postgres:
     image: postgres:14
     container_name: postgres-db
-    ports:
-      - "${DB_PORT}:${DB_PORT}"
     volumes:
       - postgres-data:/var/lib/postgresql/data
     env_file:
@@ -39,8 +37,6 @@ services:
   mongo:
     image: mongo:4.4
     container_name: mongo-db
-    ports:
-      - "${MONGODB_PORT}:${MONGODB_PORT}"
     volumes:
       - mongo-data:/data/db
     env_file:
@@ -57,8 +53,6 @@ services:
       context: .
       dockerfile: ./docker/redis.dockerfile
     container_name: redis-cache
-    ports:
-      - "${REDIS_PORT}:${REDIS_PORT}"
     volumes: 
       - ./docker/redis/redis.conf:/usr/local/etc/redis/redis.conf
       - ./docker/redis/users.acl.template:/usr/local/etc/redis/users.acl.template
