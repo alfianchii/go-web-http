@@ -96,6 +96,8 @@ cp .env.example .env
 
 2. Database configuration through the `.env` file
 ```bash
+APP_URL=127.0.0.1
+
 DB_DATABASE=go_web_http
 DB_USERNAME=your-username
 DB_PASSWORD=your-password
@@ -142,6 +144,8 @@ cd go-web-http
 -   Copy `.env.example` file with `cp .env.example .env` and configure database:
 
 ```conf
+APP_URL=0.0.0.0
+
 DB_HOST=postgres
 DB_DATABASE=go_web_http
 DB_USERNAME=gowebhttp
@@ -200,6 +204,8 @@ docker compose up --build -d
 -   Copy `.env.example` file to `.env` and do configs.
 
 ```conf
+APP_URL=127.0.0.1
+
 DB_HOST=postgres
 DB_DATABASE=go_web_http
 DB_USERNAME=your-vps-username

@@ -146,6 +146,8 @@ co .env.example .env
 -  `.env`ファイルを通じてcore depsを設定する：
 
 ```conf
+APP_URL=127.0.0.1
+
 DB_HOST=postgres
 DB_DATABASE=go_web_http
 DB_USERNAME=gowebhttp
@@ -204,6 +206,8 @@ docker compose up --build -d
 -   `.env.example`ファイルをコピーして`.env`にしてね！それから設定をいじってみて：
 
 ```conf
+APP_URL=0.0.0.0
+
 DB_HOST=postgres
 DB_DATABASE=go_web_http
 DB_USERNAME=your-vps-username
