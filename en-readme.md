@@ -249,8 +249,8 @@ server {
     proxy_set_header Host $host;
   }
 
-  error_log /var/log/nginx/my-domain_error.log;
-  access_log /var/log/nginx/my-domain_access.log;
+  error_log /var/log/nginx/your-domain_error.log;
+  access_log /var/log/nginx/your-domain_access.log;
 }
 ```
 
@@ -258,8 +258,8 @@ server {
 
 ```bash
 sudo apt install certbot python3-certbot-nginx
-sudo certbot --nginx -d my-domain.com -d www.my-domain.com
-sudo ln -s /etc/nginx/sites-available/my-domain.com /etc/nginx/sites-enabled/
+sudo certbot --nginx -d your-domain.com -d www.your-domain.com
+sudo ln -s /etc/nginx/sites-available/your-domain.com /etc/nginx/sites-enabled/
 sudo systemctl reload nginx
 ```
 
