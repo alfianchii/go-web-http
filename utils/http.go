@@ -2,7 +2,6 @@ package utils
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"web-http/dto"
 
@@ -28,28 +27,6 @@ func SendResponse(res http.ResponseWriter, msg string, status int, data interfac
 
 	res.WriteHeader(status)
 	json.NewEncoder(res).Encode(response)	
-}
-
-func ConvertToJson(data dto.Response, res http.ResponseWriter) []byte {
-	dataJson, err := json.Marshal(data)
-	if err != nil {
-		http.Error(res, "Error converting response to JSON", http.StatusInternalServerError)
-	}
-	return dataJson
-}
-
-func ResponseWithName(res http.ResponseWriter, req *http.Request, msg string) {
-	name := req.URL.Query().Get("name")
-	if name == "" {
-		name = "Guest"
-	}
-
-	message := msg + ", " + name + "!"
-	SendResponse(res, message, http.StatusOK, nil)
-}
-
-func ResponseWithJson(res http.ResponseWriter, json string) {
-	fmt.Fprint(res, json)
 }
 
 func FileServer(router chi.Router, path string, root http.FileSystem) {
